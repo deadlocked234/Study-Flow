@@ -1,70 +1,106 @@
-🚀 StudyFlow — Intelligent Productivity Ecosystem
+<!-- ================= TOP HERO BANNER ================= -->
+
+<p align="center">
+  <img
+    src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=30&pause=1200&color=38B2AC&center=true&vCenter=true&width=1000&lines=StudyFlow+-+Intelligent+Productivity+Ecosystem;Pomodoro+%7C+Analytics+%7C+Focus+Music;Build+Focus.+Track+Progress.+Improve+Daily."
+    alt="StudyFlow Hero Banner"
+  />
+</p>
+
+<p align="center">
+  <strong>A modern full-stack study & productivity application</strong><br/>
+  Designed for deep focus, clarity, and consistent growth.
+</p>
+
+---
+
+
+# 🚀 StudyFlow — Intelligent Productivity Ecosystem
 <p align="center"> <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=26&pause=1000&color=38B2AC&center=true&vCenter=true&width=900&lines=StudyFlow+-+Smart+Study+Timer+%26+Analytics;Pomodoro+%7C+Analytics+%7C+Music+%7C+Focus;Built+with+Vue%2C+Node%2C+MongoDB;Track.+Focus.+Improve." alt="Typing Animation" /> </p> <p align="center"> <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/> <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white"/> <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white"/> <img src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D"/> <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white"/> <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge"/> </p> <p align="center"> <a href="https://salahuddingfx.github.io/Study-Flow/">🔴 Live Demo</a> • <a href="https://github.com/salahuddingfx/Study-Flow/issues">🐛 Report Bug</a> • <a href="https://github.com/salahuddingfx/Study-Flow/pulls">✨ Request Feature</a> </p>
-🎯 About StudyFlow
+## 🎯 About StudyFlow
 
-StudyFlow is a full-stack productivity and study-management application designed to help students and self-learners stay focused, track progress, and build consistent study habits.
+**StudyFlow** is a full-stack productivity and study-management application designed to help students and self-learners stay focused, track progress, and build consistent study habits.
 
-It combines the Pomodoro technique, real-time analytics, task & subject management, and immersive focus music into a single modern experience.
+It combines the **Pomodoro technique**, **real-time analytics**, **task & subject management**, and **immersive focus music** into a single modern experience.
 
-✨ Key Features
+---
 
-⏱️ Smart Pomodoro Timer — Fully customizable focus & break sessions
+## ✨ Key Features
 
-📊 Deep Analytics Dashboard — Daily, weekly & monthly productivity insights
+- ⏱️ **Smart Pomodoro Timer**  
+  Fully customizable focus & break sessions  
 
-🎵 Integrated Music Player — YouTube links & local audio support
+- 📊 **Deep Analytics Dashboard**  
+  Daily, weekly & monthly productivity insights  
 
-📝 Workflow Manager — Tasks, subjects & goal tracking
+- 🎵 **Integrated Music Player**  
+  YouTube links & local audio support  
 
-🔐 Secure Authentication — JWT + Bcrypt encryption
+- 📝 **Workflow Manager**  
+  Tasks, subjects & goal tracking  
 
-⚡ Real-time Sync — Live updates via Socket.IO
+- 🔐 **Secure Authentication**  
+  JWT + Bcrypt encryption  
 
-🎨 Modern UI/UX — Responsive, dark-friendly interface
+- ⚡ **Real-time Sync**  
+  Live updates via Socket.IO  
 
-📱 Cross-Device Ready — Works on desktop & mobile
+- 🎨 **Modern UI/UX**  
+  Responsive, dark-friendly interface  
 
-🛠️ Technology Stack
-Frontend
+- 📱 **Cross-Device Ready**  
+  Works on desktop & mobile  
 
-Vue.js
+---
 
-Tailwind CSS
+## 🛠️ Technology Stack
 
-JavaScript
+### 🖥️ Frontend
+<p>
+  <img src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D"/>
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white"/>
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
+  <img src="https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Phosphor_Icons-000000?style=for-the-badge&logo=phosphoricons&logoColor=white"/>
+</p>
 
-Chart.js
+---
 
-Phosphor Icons
+### ⚙️ Backend
+<p>
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socketdotio&logoColor=white"/>
+  <img src="https://img.shields.io/badge/JWT_Auth-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white"/>
+</p>
 
-Backend
+---
 
-Node.js
+### 🗄️ Database
+<p>
+  <img src="https://img.shields.io/badge/MongoDB_Atlas-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Mongoose_ODM-880000?style=for-the-badge&logo=mongoose&logoColor=white"/>
+</p>
 
-Express.js
+---
 
-Socket.IO
+## 📋 Prerequisites
 
-JWT Authentication
+<p>
+  <img src="https://img.shields.io/badge/Node.js-v16%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
+  <img src="https://img.shields.io/badge/MongoDB-Required-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Git-Version_Control-F05032?style=for-the-badge&logo=git&logoColor=white"/>
+</p>
 
-Database
+Before you begin, make sure all the above tools are installed and properly configured.
 
-MongoDB Atlas
 
-Mongoose ODM
+---
 
-📋 Prerequisites
+## 🚀 Installation & Setup
 
-Before you begin, ensure you have:
-
-Node.js (v16 or higher)
-
-MongoDB (Local or Atlas)
-
-Git
-
-🚀 Installation & Setup
-1️⃣ Clone the Repository
+### 1️⃣ Clone the Repository
+```bash
 git clone https://github.com/salahuddingfx/Study-Flow.git
 cd Study-Flow
 
@@ -91,78 +127,195 @@ or run:
 python -m http.server 8000
 
 
-Open in browser:
-http://localhost:5500 (backend)
-http://localhost:8000 (frontend)
+Backend → http://localhost:5500
 
-📁 Project Structure
-Study-Flow/
-├── config/
-├── middleware/
-├── models/
-├── routes/
-├── public/
-├── server.js
-├── package.json
-└── README.md
+Frontend → http://localhost:8000
+```
 
-🎮 Usage Guide
-Getting Started
+## 📁 Project Structure
 
-Register / Login
+```text
+Study Flow/
+├── Backend/
+│   ├── config/            # Database & app configuration
+│   ├── middleware/        # Auth & custom middlewares
+│   ├── models/            # Mongoose schemas
+│   ├── routes/            # API routes
+│   ├── node_modules/
+│   ├── .env               # Environment variables
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── server.js          # Express server entry point
+│   └── check-deployment.js
+│
+├── Frontend/
+│   ├── Assets/
+│   │   ├── script.js      # Frontend logic
+│   │   └── style.css     # UI styles
+│   └── index.html        # Main frontend entry
+│
+├── .gitignore
+├── DEPLOYMENT.md
+├── readme.md
+└── render.yaml
+```
 
-Create subjects & tasks
+## 🎮 Usage Guide
 
-Start a Pomodoro session
+This section explains how to use **StudyFlow** effectively from the first login to productivity analysis.
 
-Music & Focus
+---
 
-Paste YouTube URLs
+### 🚀 First-Time Setup
+1. Create an account or log in securely  
+2. Set your study preferences  
+3. Add subjects you want to focus on  
 
-Upload local audio
+---
 
-Control playback & volume
+### 📝 Task & Subject Management
+- Create subjects (e.g., Math, Programming, Design)  
+- Add tasks under each subject  
+- Define goals to track your progress  
+- Organize your workflow for focused sessions  
 
-Analytics
+---
 
-Track focus duration
+### ⏱️ Focus Sessions (Pomodoro)
+- Choose a focus duration (default: 25 minutes)  
+- Select a subject and optional task  
+- Start the Pomodoro timer  
+- Take short or long breaks when prompted  
 
-Visualize progress
+---
 
-Improve productivity habits
+### 🎵 Music & Focus Environment
+- Paste YouTube links for background focus music  
+- Upload and play local audio files  
+- Control volume and playback without interrupting sessions  
+- Create a distraction-free study atmosphere  
 
-👨‍💻 Developer
+---
 
-Salah Uddin Kader
-Full Stack Developer | UI/UX Designer | Tech Enthusiast
+### 📊 Productivity Analytics
+- Track total focus time per day, week, and month  
+- View visual charts to analyze productivity trends  
+- Identify your most productive subjects  
+- Improve consistency using data-driven insights  
 
-GitHub: https://github.com/salahuddingfx
+---
 
-Email: salahuddingfx@gmail.com
+### 🔁 Daily Workflow Tip
+> Plan tasks → Start focus session → Take breaks → Review analytics → Improve tomorrow
 
-LinkedIn: https://www.linkedin.com/in/salahuddin-kader
+StudyFlow is designed to help you build **long-term study habits**, not just short sessions.
 
-StudyFlow reflects my journey in mastering modern full-stack development and building meaningful productivity tools.
 
-🤝 Contributing
+<!-- ================= DEVELOPER PROFILE ================= -->
 
-Contributions are welcome!
+## 👨‍💻 Developer
 
-Fork the repository
+<p align="center">
+  <img 
+    src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=22&pause=1000&color=38B2AC&center=true&vCenter=true&width=700&lines=Salah+Uddin+Kader;Full+Stack+Developer;UI%2FUX+Designer;Building+Modern+Productivity+Tools" 
+    alt="Developer Typing Animation"
+  />
+</p>
 
-Create a feature branch
+<p align="center">
+  <strong>Salah Uddin Kader</strong><br/>
+  Full Stack Developer | UI/UX Designer | Tech Enthusiast
+</p>
 
-Commit your changes
+<p align="center">
+  Passionate about building scalable web applications and clean user experiences.<br/>
+  StudyFlow reflects my journey in mastering modern full-stack development.
+</p>
 
-Push to the branch
+<p align="center">
+  <a href="https://github.com/salahuddingfx">
+    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/>
+  </a>
+  <a href="mailto:salauddinkaderappy@gmail.com">
+    <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
+  </a>
+  <a href="https://www.linkedin.com/in/salahuddingfx">
+    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/>
+  </a>
+</p>
 
-Open a Pull Request
+<p align="center">
+  🚀 Always learning • Always building • Always improving
+</p>
 
-📄 License
 
-This project is licensed under the MIT License.
+<!-- ================= CONTRIBUTING ================= -->
 
-Copyright © 2026
-Salah Uddin Kader
+## 🤝 Contributing
 
-<p align="center"> <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&pause=1000&color=FFFFFF&center=true&vCenter=true&width=700&lines=Enjoying+StudyFlow%3F;Give+the+repo+a+star+⭐;Happy+Studying!" /> </p>
+Contributions are highly appreciated and help make **StudyFlow** better for everyone.
+
+### How to Contribute
+1. 🍴 **Fork** the repository  
+2. 🌱 **Create a feature branch**  
+   ```bash
+   git checkout -b feature/your-feature-name
+   git commit -m "Add: meaningful feature description"
+   git push origin feature/your-feature-name
+   
+
+<!-- ================= LICENSE HEADER BANNER ================= -->
+
+<p align="center">
+  <img 
+    src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=20&pause=1000&color=7C3AED&center=true&vCenter=true&width=700&lines=Open+Source+%7C+MIT+Licensed;Built+for+Learning+and+Growth" 
+    alt="License Banner"
+  />
+</p>
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**, a permissive open-source license that allows you to:
+
+- ✅ Use the software freely  
+- ✅ Modify and adapt it for your needs  
+- ✅ Distribute and share it  
+- ✅ Use it for personal or commercial projects  
+
+As long as the original copyright
+and license notice are included.
+
+---
+
+### © Copyright
+
+
+All rights reserved under the MIT License.
+
+---
+
+<!-- ================= LICENSE FOOTER BANNER ================= -->
+
+<p align="center">
+  <img 
+    src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&pause=1000&color=38B2AC&center=true&vCenter=true&width=800&lines=Knowledge+grows+when+it+is+shared.;Open+Source+empowers+everyone.;Happy+Building!" 
+    alt="License Footer Banner"
+  />
+</p>
+
+<!-- ================= FINAL FOOTER BANNER ================= -->
+
+<p align="center">
+  <img
+    src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&pause=1200&color=7C3AED&center=true&vCenter=true&width=900&lines=Open+Source+for+Learning+and+Growth.;Built+with+Passion+and+Purpose.;If+you+found+this+useful%2C+give+it+a+star!"
+    alt="StudyFlow Footer Banner"
+  />
+</p>
+
+<p align="center">
+  ⭐ Thank you for exploring <strong>StudyFlow</strong><br/>
+  Happy Learning • Happy Building • Keep Growing
+</p>
+
