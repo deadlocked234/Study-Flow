@@ -51,6 +51,34 @@ It combines the **Pomodoro technique**, **real-time analytics**, **task & subjec
 - 📱 **Cross-Device Ready**  
   Works on desktop & mobile  
 
+- 🏆 **Gamified Achievements**  
+  Unlock rewards for study milestones  
+
+---
+
+## 🏆 Achievement System
+
+StudyFlow includes a gamified achievement system to motivate consistent study habits. Earn points and unlock badges by reaching study milestones:
+
+### 📚 Study Time Achievements
+- **First Steps**: Complete 1 study session (10 points)
+- **Hour Master**: Study for 1 hour total (15 points)
+- **Dedicated Scholar**: Study for 10 hours total (50 points)
+- **Study Warrior**: Study for 50 hours total (150 points)
+
+### 🔥 Consistency Achievements
+- **Consistency King**: Maintain a 7-day study streak (75 points)
+- **Perfect Week**: Study every day for a week (100 points)
+
+### 🎯 Goal & Task Achievements
+- **Goal Crusher**: Complete 1 goal (20 points)
+- **Goal Master**: Complete 10 goals (100 points)
+- **Subject Explorer**: Create 1 subject (10 points)
+- **Task Manager**: Complete 1 task (15 points)
+- **Task Champion**: Complete 50 tasks (80 points)
+
+**Note**: Achievements are automatically unlocked as you progress. Check your profile to see earned badges!
+
 ---
 
 ## 🛠️ Technology Stack

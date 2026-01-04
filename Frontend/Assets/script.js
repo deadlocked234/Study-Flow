@@ -514,6 +514,7 @@ createApp({
                 avgSessionLength
             };
         }
+
     },
 
     watch: {
