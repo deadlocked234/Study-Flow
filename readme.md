@@ -1,295 +1,168 @@
-# 🚀 StudyFlow - Professional Study Timer & Analytics App
+🚀 StudyFlow — Intelligent Productivity Ecosystem
+<p align="center"> <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=26&pause=1000&color=38B2AC&center=true&vCenter=true&width=900&lines=StudyFlow+-+Smart+Study+Timer+%26+Analytics;Pomodoro+%7C+Analytics+%7C+Music+%7C+Focus;Built+with+Vue%2C+Node%2C+MongoDB;Track.+Focus.+Improve." alt="Typing Animation" /> </p> <p align="center"> <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/> <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white"/> <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white"/> <img src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D"/> <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white"/> <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge"/> </p> <p align="center"> <a href="https://salahuddingfx.github.io/Study-Flow/">🔴 Live Demo</a> • <a href="https://github.com/salahuddingfx/Study-Flow/issues">🐛 Report Bug</a> • <a href="https://github.com/salahuddingfx/Study-Flow/pulls">✨ Request Feature</a> </p>
+🎯 About StudyFlow
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
-  <img src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D" alt="Vue.js" />
-  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js" />
-  <img src="https://img.shields.io/badge/Socket.io-010101?&style=for-the-badge&logo=Socket.io&logoColor=white" alt="Socket.io" />
-</div>
+StudyFlow is a full-stack productivity and study-management application designed to help students and self-learners stay focused, track progress, and build consistent study habits.
 
-<div align="center">
-  <h3>🎯 Boost Your Productivity with Smart Study Sessions</h3>
-  <p>A beautiful, feature-rich study timer app with Pomodoro technique, analytics, music integration, and real-time notifications.</p>
-</div>
+It combines the Pomodoro technique, real-time analytics, task & subject management, and immersive focus music into a single modern experience.
 
----
+✨ Key Features
 
-## ✨ Features
+⏱️ Smart Pomodoro Timer — Fully customizable focus & break sessions
 
-<div align="center">
-  <table>
-    <tr>
-      <td align="center">
-        <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Timer%20Clock.png" width="50" height="50" alt="Timer" />
-        <br><b>Pomodoro Timer</b>
-      </td>
-      <td align="center">
-        <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Chart%20Increasing.png" width="50" height="50" alt="Analytics" />
-        <br><b>Study Analytics</b>
-      </td>
-      <td align="center">
-        <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Headphone.png" width="50" height="50" alt="Music" />
-        <br><b>Music Integration</b>
-      </td>
-      <td align="center">
-        <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Notebook.png" width="50" height="50" alt="Tasks" />
-        <br><b>Task Management</b>
-      </td>
-    </tr>
-  </table>
-</div>
+📊 Deep Analytics Dashboard — Daily, weekly & monthly productivity insights
 
-### 🎯 Core Features
-- ⏱️ **Advanced Pomodoro Timer** with customizable sessions
-- 📊 **Detailed Analytics** with charts and progress tracking
-- 🎵 **YouTube Music Integration** with playlist support
-- 📝 **Task Management** with subjects and goals
-- 🔐 **User Authentication** with JWT tokens
-- 📱 **Responsive Design** for all devices
-- 🔔 **Smart Notifications** with sound alerts
-- 🌙 **Dark Theme** with smooth animations
-- 📊 **Real-time Statistics** with Chart.js
-- 🔄 **Real-time Updates** with Socket.IO
+🎵 Integrated Music Player — YouTube links & local audio support
 
----
+📝 Workflow Manager — Tasks, subjects & goal tracking
 
-## 🛠️ Tech Stack
+🔐 Secure Authentication — JWT + Bcrypt encryption
 
-<div align="center">
-  <h4>Frontend</h4>
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3" />
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
-  <img src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D" alt="Vue.js" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+⚡ Real-time Sync — Live updates via Socket.IO
 
-  <h4>Backend</h4>
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js" />
-  <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
-  <img src="https://img.shields.io/badge/Socket.io-010101?&style=for-the-badge&logo=Socket.io&logoColor=white" alt="Socket.IO" />
+🎨 Modern UI/UX — Responsive, dark-friendly interface
 
-  <h4>Tools & Libraries</h4>
-  <img src="https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white" alt="Chart.js" />
-  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white" alt="JWT" />
-  <img src="https://img.shields.io/badge/Bcrypt-000000?style=for-the-badge&logo=bcrypt&logoColor=white" alt="Bcrypt" />
-</div>
+📱 Cross-Device Ready — Works on desktop & mobile
 
----
+🛠️ Technology Stack
+Frontend
 
-## 📋 Prerequisites
+Vue.js
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Computer.png" width="30" height="30" alt="Computer" />
-  <strong>Before you begin, ensure you have the following installed:</strong>
-</div>
+Tailwind CSS
 
-- 🟢 **Node.js** (v16 or higher) - [Download here](https://nodejs.org/)
-- 🍃 **MongoDB** (Local or Atlas) - [Download here](https://www.mongodb.com/)
-- 📝 **Git** - [Download here](https://git-scm.com/)
+JavaScript
 
----
+Chart.js
 
-## 🚀 Installation & Setup
+Phosphor Icons
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Rocket.png" width="40" height="40" alt="Rocket" />
-  <h3>Let's get StudyFlow running on your machine!</h3>
-</div>
+Backend
 
-### 1️⃣ Clone the Repository
-```bash
-git clone https://github.com/yourusername/studyflow.git
-cd studyflow
-```
+Node.js
 
-### 2️⃣ Backend Setup
-```bash
-cd Backend
+Express.js
+
+Socket.IO
+
+JWT Authentication
+
+Database
+
+MongoDB Atlas
+
+Mongoose ODM
+
+📋 Prerequisites
+
+Before you begin, ensure you have:
+
+Node.js (v16 or higher)
+
+MongoDB (Local or Atlas)
+
+Git
+
+🚀 Installation & Setup
+1️⃣ Clone the Repository
+git clone https://github.com/salahuddingfx/Study-Flow.git
+cd Study-Flow
+
+2️⃣ Install Dependencies
 npm install
-```
 
-### 3️⃣ Environment Configuration
-Create a `.env` file in the Backend directory:
-```env
-PORT=3000
-MONGO_URI=mongodb://localhost:27017/studyflow
-# OR for MongoDB Atlas:
-# MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/studyflow
-JWT_SECRET=your_super_secret_jwt_key_here
+3️⃣ Environment Configuration
+
+Create a .env file in the root directory:
+
+PORT=5500
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_super_secret_key
 NODE_ENV=development
-```
 
-### 4️⃣ Start MongoDB
-Make sure MongoDB is running locally or your Atlas connection is active.
-
-### 5️⃣ Start the Application
-```bash
-# Backend
+4️⃣ Start the Backend Server
 npm start
-# or for development
-npm run dev
 
-# Frontend (in another terminal)
-cd ../Frontend
-# Serve with any static server (e.g., Live Server extension in VS Code)
-# Or use Python: python -m http.server 5500
-```
+5️⃣ Run the Frontend
 
-### 6️⃣ Access the App
-Open your browser and go to: `http://localhost:3000`
+Use VS Code Live Server
+or run:
 
----
+python -m http.server 8000
 
-## 📁 Project Structure
 
-```
-StudyFlow/
-├── Backend/
-│   ├── config/
-│   │   └── db.js                 # Database connection
-│   ├── middleware/
-│   │   └── auth.middleware.js    # JWT authentication
-│   ├── models/
-│   │   ├── User.js              # User model
-│   │   ├── Session.js           # Study session model
-│   │   ├── Task.js              # Task model
-│   │   └── Subject.js           # Subject model
-│   ├── routes/
-│   │   ├── auth.routes.js       # Authentication routes
-│   │   ├── session.routes.js    # Session management
-│   │   ├── task.routes.js       # Task routes
-│   │   └── user.routes.js       # User routes
-│   ├── server.js                # Main server file
-│   ├── package.json
-│   └── .env                     # Environment variables
-├── Frontend/
-│   ├── Index.html               # Main HTML file
-│   ├── Assets/
-│   │   ├── script.js            # Vue.js application
-│   │   └── style.css            # Custom styles
-│   └── Audio/                   # Audio files directory
+Open in browser:
+http://localhost:5500 (backend)
+http://localhost:8000 (frontend)
+
+📁 Project Structure
+Study-Flow/
+├── config/
+├── middleware/
+├── models/
+├── routes/
+├── public/
+├── server.js
+├── package.json
 └── README.md
-```
 
----
+🎮 Usage Guide
+Getting Started
 
-## 🎮 Usage Guide
+Register / Login
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Video%20Game.png" width="30" height="30" alt="Game" />
-  <h3>How to use StudyFlow effectively</h3>
-</div>
+Create subjects & tasks
 
-### 👤 Getting Started
-1. **Register/Login** to create your account
-2. **Set up your profile** with subjects and preferences
-3. **Start your first study session** using the Pomodoro timer
+Start a Pomodoro session
 
-### ⏱️ Using the Timer
-- Choose your **focus duration** (default: 25 minutes)
-- Select a **subject** for tracking
-- Add a **task** if needed
-- Click **Start** and focus! 🎯
+Music & Focus
 
-### 🎵 Music Integration
-- **YouTube Links**: Paste YouTube video URLs
-- **Audio Files**: Upload local audio files
-- **Playlists**: Create and manage multiple playlists
-- **Controls**: Volume, speed, and playback controls
+Paste YouTube URLs
 
-### 📊 Analytics
-- View **daily/weekly/monthly** statistics
-- Track **study time trends** with interactive charts
-- Monitor **subject-wise progress**
-- Analyze **productivity patterns**
+Upload local audio
 
----
+Control playback & volume
 
-## 🔧 API Endpoints
+Analytics
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/World%20Map.png" width="30" height="30" alt="API" />
-  <h4>Backend API Documentation</h4>
-</div>
+Track focus duration
 
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/me` - Get current user info
-- `POST /api/auth/logout` - Logout user
+Visualize progress
 
-### Sessions
-- `GET /api/sessions` - Get all user sessions
-- `POST /api/sessions` - Create new session
+Improve productivity habits
 
-### Tasks
-- `GET /api/tasks` - Get all user tasks
-- `POST /api/tasks` - Create new task
-- `PUT /api/tasks/:id` - Update task
-- `DELETE /api/tasks/:id` - Delete task
+👨‍💻 Developer
 
-### Subjects
-- `GET /api/subjects` - Get all user subjects
-- `POST /api/subjects` - Create new subject
+Salah Uddin Kader
+Full Stack Developer | UI/UX Designer | Tech Enthusiast
 
----
+GitHub: https://github.com/salahuddingfx
 
-## 🤝 Contributing
+Email: salahuddingfx@gmail.com
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Handshake.png" width="30" height="30" alt="Contribute" />
-  <h3>Want to contribute to StudyFlow?</h3>
-</div>
+LinkedIn: https://www.linkedin.com/in/salahuddin-kader
 
-We welcome contributions! Here's how you can help:
+StudyFlow reflects my journey in mastering modern full-stack development and building meaningful productivity tools.
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
+🤝 Contributing
 
-### Development Guidelines
-- Follow the existing code style
-- Write clear, concise commit messages
-- Test your changes thoroughly
-- Update documentation as needed
+Contributions are welcome!
 
----
+Fork the repository
 
-## 📄 License
+Create a feature branch
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Scroll.png" width="30" height="30" alt="License" />
-</div>
+Commit your changes
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Push to the branch
 
----
+Open a Pull Request
 
-## 🙏 Acknowledgments
+📄 License
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Red%20Heart.png" width="30" height="30" alt="Thanks" />
-  <h4>Special Thanks</h4>
-</div>
+This project is licensed under the MIT License.
 
-- **Vue.js** for the amazing reactive framework
-- **Chart.js** for beautiful data visualizations
-- **Tailwind CSS** for utility-first styling
-- **Phosphor Icons** for consistent iconography
-- **The Open Source Community** for inspiration and tools
+Copyright © 2026
+Salah Uddin Kader
 
----
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" width="30" height="30" alt="Star" />
-  <h3>Enjoy studying with StudyFlow!</h3>
-  <p>If you find this project helpful, please give it a ⭐ star!</p>
-
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Student.png" width="50" height="50" alt="Student" />
-  <br>
-  <strong>Happy Learning! 📚✨</strong>
-</div></content>
+<p align="center"> <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&pause=1000&color=FFFFFF&center=true&vCenter=true&width=700&lines=Enjoying+StudyFlow%3F;Give+the+repo+a+star+⭐;Happy+Studying!" /> </p>
