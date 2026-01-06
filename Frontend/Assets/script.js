@@ -556,53 +556,79 @@ async mounted() {
 
         // Data Export/Import Methods
         // Data Export/Import Methods
+        // Data Export Methods (PDF Support)
         async exportUserData() {
             try {
+                // Check if jsPDF is loaded
+                if (!window.jspdf) {
+                    this.showInlineMessage('PDF Library not loaded. Please refresh.');
+                    return;
+                }
+
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
                 
-                // Title
-                doc.setFontSize(20);
-                doc.setTextColor(139, 92, 246); // Purple color
-                doc.text(`StudyFlow Report: ${this.currentUser}`, 20, 20);
+                // 1. Header
+                doc.setFontSize(22);
+                doc.setTextColor(139, 92, 246); // Purple
+                doc.text(`StudyFlow Report`, 20, 20);
                 
-                // User Info
+                // 2. User Info
                 doc.setFontSize(12);
                 doc.setTextColor(0, 0, 0);
-                doc.text(`Email: ${this.userEmail}`, 20, 30);
-                doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 36);
+                doc.text(`User: ${this.currentUser}`, 20, 30);
+                doc.text(`Email: ${this.userEmail}`, 20, 36);
+                doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 42);
                 
-                // Statistics
-                doc.setFontSize(14);
-                doc.setTextColor(100, 100, 100);
-                doc.text('Statistics', 20, 50);
-                
-                doc.setFontSize(10);
-                doc.setTextColor(0, 0, 0);
-                doc.text(`Total Focus Time: ${this.totalFocusTime} minutes`, 20, 60);
-                doc.text(`Total Sessions: ${this.totalSessions}`, 20, 66);
-                doc.text(`Completed Tasks: ${this.completedTasksCount}`, 20, 72);
-                
-                // Tasks List
-                doc.setFontSize(14);
-                doc.setTextColor(100, 100, 100);
-                doc.text('Pending Tasks', 20, 90);
-                
-                let y = 100;
-                this.tasks.filter(t => !t.completed).forEach((task, index) => {
-                    if (y > 280) { doc.addPage(); y = 20; } // New page if full
-                    doc.setFontSize(10);
-                    doc.setTextColor(0, 0, 0);
-                    doc.text(`${index + 1}. ${task.text}`, 20, y);
-                    y += 8;
-                });
+                // Divider
+                doc.setDrawColor(200, 200, 200);
+                doc.line(20, 48, 190, 48);
 
-                // Save PDF
-                doc.save(`studyflow-report-${this.currentUser}.pdf`);
-                this.showInlineMessage('Report downloaded as PDF!');
+                // 3. Statistics
+                doc.setFontSize(16);
+                doc.setTextColor(100, 100, 100);
+                doc.text('Statistics', 20, 60);
+                
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`• Total Focus Time: ${Math.floor(this.totalFocusTime / 60)}h ${this.totalFocusTime % 60}m`, 25, 70);
+                doc.text(`• Total Sessions: ${this.totalSessions}`, 25, 78);
+                doc.text(`• Completed Tasks: ${this.completedTasksCount}`, 25, 86);
+                doc.text(`• Current Streak: ${this.currentStreak} days`, 25, 94);
+                
+                // 4. Pending Tasks List
+                doc.setFontSize(16);
+                doc.setTextColor(100, 100, 100);
+                doc.text('Pending Tasks', 20, 110);
+                
+                let y = 120;
+                const pendingTasks = this.tasks.filter(t => !t.completed);
+                
+                if (pendingTasks.length > 0) {
+                    doc.setFontSize(11);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    pendingTasks.forEach((task, index) => {
+                        // Add new page if list is too long
+                        if (y > 270) { 
+                            doc.addPage(); 
+                            y = 20; 
+                        }
+                        doc.text(`${index + 1}. ${task.text}`, 25, y);
+                        y += 8;
+                    });
+                } else {
+                    doc.setFontSize(11);
+                    doc.setTextColor(150, 150, 150);
+                    doc.text('No pending tasks! Great job!', 25, y);
+                }
+
+                // 5. Save PDF
+                doc.save(`StudyFlow_Report_${this.currentUser}.pdf`);
+                this.showInlineMessage('Report downloaded as PDF! 📄');
                 
             } catch (error) {
-                console.error(error);
+                console.error("PDF Export Error:", error);
                 this.showInlineMessage('Failed to generate PDF');
             }
         },
