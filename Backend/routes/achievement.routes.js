@@ -157,7 +157,7 @@ router.post('/check-progress', protect, async (req, res) => {
             let newProgress = 0;
             let shouldUnlock = false;
 
-            switch (achievement.criteria.type) {
+switch (achievement.criteria.type) {
                 case 'total-hours':
                     newProgress = sessions.reduce((sum, session) => sum + session.duration, 0) / 60;
                     break;
@@ -169,7 +169,9 @@ router.post('/check-progress', protect, async (req, res) => {
                 case 'streak-days':
                     const studyDays = new Set();
                     sessions.forEach(session => {
-                        const date = session.startTime.toISOString().split('T')[0];
+                        // FIX: startTime -> timestamp
+                        // timestamp যদি স্ট্রিং হয়, তাই new Date() ব্যবহার করা নিরাপদ
+                        const date = new Date(session.timestamp).toISOString().split('T')[0];
                         studyDays.add(date);
                     });
                     const sortedDays = Array.from(studyDays).sort();
@@ -209,13 +211,16 @@ router.post('/check-progress', protect, async (req, res) => {
                     const weekStart = new Date(now);
                     weekStart.setDate(now.getDate() - now.getDay());
 
-                    const weekSessions = sessions.filter(session =>
-                        session.startTime >= weekStart && session.startTime <= now
-                    );
+                    const weekSessions = sessions.filter(session => {
+                        // FIX: startTime -> timestamp
+                        const sessionDate = new Date(session.timestamp);
+                        return sessionDate >= weekStart && sessionDate <= now;
+                    });
 
                     const weekDays = new Set();
                     weekSessions.forEach(session => {
-                        const day = session.startTime.getDay();
+                        // FIX: startTime -> timestamp
+                        const day = new Date(session.timestamp).getDay();
                         weekDays.add(day);
                     });
 

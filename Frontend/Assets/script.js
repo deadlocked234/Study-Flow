@@ -558,32 +558,52 @@ async mounted() {
         // Data Export/Import Methods
         async exportUserData() {
             try {
-                const data = {
-                    user: {
-                        username: this.currentUser,
-                        email: this.userEmail,
-                        firstName: this.userFullName.split(' ')[0],
-                        lastName: this.userFullName.split(' ')[1] || ''
-                    },
-                    subjects: this.subjects,
-                    tasks: this.tasks,
-                    sessions: this.sessions,
-                    goals: this.goals,
-                    achievements: this.achievements,
-                    exportedAt: new Date().toISOString()
-                };
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Title
+                doc.setFontSize(20);
+                doc.setTextColor(139, 92, 246); // Purple color
+                doc.text(`StudyFlow Report: ${this.currentUser}`, 20, 20);
+                
+                // User Info
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Email: ${this.userEmail}`, 20, 30);
+                doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 36);
+                
+                // Statistics
+                doc.setFontSize(14);
+                doc.setTextColor(100, 100, 100);
+                doc.text('Statistics', 20, 50);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Total Focus Time: ${this.totalFocusTime} minutes`, 20, 60);
+                doc.text(`Total Sessions: ${this.totalSessions}`, 20, 66);
+                doc.text(`Completed Tasks: ${this.completedTasksCount}`, 20, 72);
+                
+                // Tasks List
+                doc.setFontSize(14);
+                doc.setTextColor(100, 100, 100);
+                doc.text('Pending Tasks', 20, 90);
+                
+                let y = 100;
+                this.tasks.filter(t => !t.completed).forEach((task, index) => {
+                    if (y > 280) { doc.addPage(); y = 20; } // New page if full
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(`${index + 1}. ${task.text}`, 20, y);
+                    y += 8;
+                });
 
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `studyflow-data-${this.currentUser}-${new Date().toISOString().split('T')[0]}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
-
-                this.showInlineMessage('Data exported successfully!');
+                // Save PDF
+                doc.save(`studyflow-report-${this.currentUser}.pdf`);
+                this.showInlineMessage('Report downloaded as PDF!');
+                
             } catch (error) {
-                this.showInlineMessage('Failed to export data');
+                console.error(error);
+                this.showInlineMessage('Failed to generate PDF');
             }
         },
 
