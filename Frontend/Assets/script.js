@@ -223,10 +223,9 @@ createApp({
         }; // ১. এখানে return অবজেক্ট শেষ হলো
     },     // ২. এই ব্র্যাকেটটি দিয়ে data() ফাংশন শেষ করতে হবে (এটি মিসিং ছিল)
 
-    async mounted() {
+async mounted() {
         document.body.className = 'theme-dark';
-        // ... বাকি কোড ...
-
+        
         // Load YouTube API Script
         this.loadYouTubeAPI(); 
 
@@ -245,11 +244,10 @@ createApp({
                     `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
             }
         };
-        // --- Hover Effect Logic (New Code) ---
+
+        // --- Hover Effect Logic ---
         this._hoverChecker = (e) => {
             const target = e.target;
-            
-            // চেক করা হচ্ছে মাউস কোনো বাটন, লিংক বা ইনপুট ফিল্ডের ওপর আছে কি না
             const isHoverable = target.closest('a') || 
                                 target.closest('button') || 
                                 target.closest('.card-hover') || 
@@ -267,7 +265,6 @@ createApp({
             }
         };
         
-        // মাউস মুভ করার সাথে সাথে চেক করবে
         document.addEventListener('mouseover', this._hoverChecker);
         document.addEventListener('mousemove', this._mouseMoveHandler);
 
@@ -279,7 +276,6 @@ createApp({
         };
         window.addEventListener('scroll', this._scrollHandler);
 
-        // Online/Offline status tracking
         this._onlineHandler = () => {
             this.isOnline = true;
             this.lastSyncTime = new Date().toISOString();
@@ -293,25 +289,34 @@ createApp({
         window.addEventListener('online', this._onlineHandler);
         window.addEventListener('offline', this._offlineHandler);
 
-        // Set initial online status
         this.isOnline = navigator.onLine;
 
-        // --- REAL LOADING LOGIC ---
+        // --- OPTIMIZED LOADING LOGIC ---
         const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
         this.loadingText = "Checking authentication...";
+        
+        // Server Wake-up Message (Optional UX Improvement)
+        const slowServerTimeout = setTimeout(() => {
+            if (this.isLoading || this.showLoader) {
+                this.loadingText = "Waking up server (this may take 30s)...";
+            }
+        }, 5000);
+
         const token = localStorage.getItem('jwt');
 
         if (!token) {
-            await wait(800); 
+            await wait(100); // Reduced from 800
             this.loadingText = "Setting up guest environment...";
             this.currentUser = 'guest';
-            await wait(600);
+            await wait(100); // Reduced from 600
             
             this.loadTheme();
             this.loadNotificationSettings();
             this.loadTimerSettings();
             this.loadMusicSettings();
+            
+            clearTimeout(slowServerTimeout);
             this.showLoader = false;
             return;
         }
@@ -324,11 +329,13 @@ createApp({
                 }
             });
 
+            clearTimeout(slowServerTimeout); // Clear timeout on response
+
             if (!res.ok) throw new Error('Invalid token');
 
             this.loadingText = "Verifying user data...";
             const user = await res.json();
-            await wait(500);
+            // wait(500) removed for speed
 
             this.currentUser = user.username || user.user?.username; 
             this.userEmail = user.email || user.user?.email || '';
@@ -336,16 +343,17 @@ createApp({
             this.isAuthenticated = true;
             this.authToken = token;
 
-            this.loadingText = "Syncing tasks & sessions...";
-            await this.loadUserData();
-            
-            this.loadingText = "Loading preferences...";
-            await this.loadAlarmSettings();
-            await this.loadMusicSettings();
+            // Parallel Loading for Speed
+            this.loadingText = "Syncing data & preferences...";
+            await Promise.all([
+                this.loadUserData(),
+                this.loadAlarmSettings(),
+                this.loadMusicSettings()
+            ]);
 
             this.loadingText = "Establishing secure connection...";
             this.initializeSocket();
-            await wait(600);
+            await wait(100); // Reduced from 600
 
             this.loadTheme();
             this.loadNotificationSettings();
@@ -353,12 +361,13 @@ createApp({
             this.startNotificationFeatures();
 
             this.loadingText = "Ready!";
-            await wait(400);
+            await wait(100); // Reduced from 400
 
         } catch (err) {
             console.error('Auth restore failed', err);
+            clearTimeout(slowServerTimeout);
             this.loadingText = "Session expired. Redirecting...";
-            await wait(1000);
+            await wait(500); // Reduced from 1000
             localStorage.removeItem('jwt');
             this.loadTheme();
             this.loadNotificationSettings();
