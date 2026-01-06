@@ -42,7 +42,6 @@ const limiter = rateLimit({
 app.use('/api', limiter); 
 
 // CORS Config
-// CORS Config
 const allowedOrigins = [
     'http://127.0.0.1:5500',
     'http://localhost:5500',
@@ -66,7 +65,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Socket.IO
+// Socket.IO Setup
 const io = socketIo(server, {
     cors: {
         origin: "*",
@@ -99,11 +98,13 @@ io.use((socket, next) => {
 io.on('connection', (socket) => {
     if (socket.userId) socket.join(`user_${socket.userId}`);
 
+    // Timer Events
     socket.on('start-timer', (data) => socket.to(`user_${socket.userId}`).emit('timer-started', data));
     socket.on('pause-timer', (data) => socket.to(`user_${socket.userId}`).emit('timer-paused', data));
     socket.on('reset-timer', (data) => socket.to(`user_${socket.userId}`).emit('timer-reset', data));
     socket.on('timer-tick', (data) => socket.to(`user_${socket.userId}`).emit('timer-update', data));
 
+    // Task Events
     socket.on('task-created', (task) => socket.to(`user_${socket.userId}`).emit('task-added', task));
     socket.on('task-updated', (task) => socket.to(`user_${socket.userId}`).emit('task-updated', task));
     socket.on('task-deleted', (id) => socket.to(`user_${socket.userId}`).emit('task-deleted', id));
@@ -114,35 +115,44 @@ app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'success', uptime: process.uptime() });
 });
 
+// Auth & User Routes
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/user', require('./routes/user.routes')); 
 
+// Task Routes (with Socket.IO)
 const taskRoutes = require('./routes/task.routes');
 taskRoutes.setIo(io);
 app.use('/api/tasks', taskRoutes);
 
+// Session Routes (with Socket.IO)
 const sessionRoutes = require('./routes/session.routes');
 sessionRoutes.setIo(io);
 app.use('/api/sessions', sessionRoutes);
 
+// Subject Routes (with Socket.IO)
 const subjectRoutes = require('./routes/subject.routes');
 subjectRoutes.setIo(io);
 app.use('/api/subjects', subjectRoutes);
 
+// Analytics Route
 app.use('/api/analytics', require('./routes/analytics.routes'));
 
+// Goal Routes (with Socket.IO)
 const goalRoutes = require('./routes/goal.routes');
 goalRoutes.setIo(io);
 app.use('/api/goals', goalRoutes);
 
-app.use('/api/achievements', require('./routes/achievement.routes'));
+// Achievement Routes (✅ FIXED with Socket.IO)
+const achievementRoutes = require('./routes/achievement.routes');
+achievementRoutes.setIo(io); // এটি মিসিং ছিল, এখন ঠিক করা হয়েছে
+app.use('/api/achievements', achievementRoutes);
 
-// Catch-all
+// Catch-all Route
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../index.html'));
 });
 
-// Error Handling
+// Global Error Handling
 app.use((err, req, res, next) => {
     console.error(`❌ Error: ${err.message}`);
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;

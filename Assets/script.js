@@ -9,12 +9,7 @@ createApp({
     data() {
         return {
             // API Configuration
-            // script.js এর এই অংশটি আপডেট করুন
-            // API Configuration
-        // লজিক বাদ দিয়ে সরাসরি আপনার লাইভ লিঙ্ক বসান
-        API_BASE_URL: 'https://study-flow-backend-x29c.onrender.com',
-
-        // ... বাকি কোড একই থাকবে 
+            API_BASE_URL: 'https://study-flow-backend-x29c.onrender.com',
 
             // Loading Text for Real Effect
             loadingText: 'Initializing...', 
@@ -134,7 +129,7 @@ createApp({
             streakAlerts: true,
             reminderInterval: 60, // minutes
 
-            // Music Variables (UPDATED FOR YOUTUBE API)
+            // Music Variables
             musicTab: 'playlists',
             musicPlaylists: [],
             currentPlaylist: null,
@@ -150,7 +145,7 @@ createApp({
             youtubeUrl: '',
             youtubeVideoId: '',
             showYouTubePlayer: false,
-            youtubePlayer: null, // API Object store korbe
+            youtubePlayer: null, 
             youtubeVolume: 50,
             youtubeMuted: false,
             youtubeSpeed: 1,
@@ -220,28 +215,35 @@ createApp({
             // Online/Offline status
             isOnline: navigator.onLine,
             lastSyncTime: null,
-        }; // ১. এখানে return অবজেক্ট শেষ হলো
-    },     // ২. এই ব্র্যাকেটটি দিয়ে data() ফাংশন শেষ করতে হবে (এটি মিসিং ছিল)
+        }; 
+    }, 
 
-async mounted() {
+    async mounted() {
         document.body.className = 'theme-dark';
+        this.createParticles();
+
+        // Display a random motivational quote
+        this.currentQuote = this.motivationalQuotes[
+            Math.floor(Math.random() * this.motivationalQuotes.length)
+        ];
         
         // Load YouTube API Script
         this.loadYouTubeAPI(); 
 
+        // --- UPDATED CURSOR LOGIC FOR NEW CSS ---
         this._mouseMoveHandler = (e) => {
             this.cursorX = e.clientX;
             this.cursorY = e.clientY;
-            this.cursorDotX = e.clientX;
-            this.cursorDotY = e.clientY;
-
+            
+            // New logic: Use 'left' and 'top' instead of 'transform'
+            // CSS handles the centering (-50% translate)
             if (this.$refs.cursor) {
-                this.$refs.cursor.style.transform =
-                    `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+                this.$refs.cursor.style.left = e.clientX + 'px';
+                this.$refs.cursor.style.top = e.clientY + 'px';
             }
             if (this.$refs.cursorDot) {
-                this.$refs.cursorDot.style.transform =
-                    `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
+                this.$refs.cursorDot.style.left = e.clientX + 'px';
+                this.$refs.cursorDot.style.top = e.clientY + 'px';
             }
         };
 
@@ -296,7 +298,7 @@ async mounted() {
 
         this.loadingText = "Checking authentication...";
         
-        // Server Wake-up Message (Optional UX Improvement)
+        // Server Wake-up Message
         const slowServerTimeout = setTimeout(() => {
             if (this.isLoading || this.showLoader) {
                 this.loadingText = "Waking up server (this may take 30s)...";
@@ -306,10 +308,10 @@ async mounted() {
         const token = localStorage.getItem('jwt');
 
         if (!token) {
-            await wait(100); // Reduced from 800
+            await wait(100); 
             this.loadingText = "Setting up guest environment...";
             this.currentUser = 'guest';
-            await wait(100); // Reduced from 600
+            await wait(100); 
             
             this.loadTheme();
             this.loadNotificationSettings();
@@ -329,13 +331,12 @@ async mounted() {
                 }
             });
 
-            clearTimeout(slowServerTimeout); // Clear timeout on response
+            clearTimeout(slowServerTimeout); 
 
             if (!res.ok) throw new Error('Invalid token');
 
             this.loadingText = "Verifying user data...";
             const user = await res.json();
-            // wait(500) removed for speed
 
             this.currentUser = user.username || user.user?.username; 
             this.userEmail = user.email || user.user?.email || '';
@@ -343,7 +344,7 @@ async mounted() {
             this.isAuthenticated = true;
             this.authToken = token;
 
-            // Parallel Loading for Speed
+            // Parallel Loading
             this.loadingText = "Syncing data & preferences...";
             await Promise.all([
                 this.loadUserData(),
@@ -353,7 +354,7 @@ async mounted() {
 
             this.loadingText = "Establishing secure connection...";
             this.initializeSocket();
-            await wait(100); // Reduced from 600
+            await wait(100); 
 
             this.loadTheme();
             this.loadNotificationSettings();
@@ -361,13 +362,13 @@ async mounted() {
             this.startNotificationFeatures();
 
             this.loadingText = "Ready!";
-            await wait(100); // Reduced from 400
+            await wait(100); 
 
         } catch (err) {
             console.error('Auth restore failed', err);
             clearTimeout(slowServerTimeout);
             this.loadingText = "Session expired. Redirecting...";
-            await wait(500); // Reduced from 1000
+            await wait(500); 
             localStorage.removeItem('jwt');
             this.loadTheme();
             this.loadNotificationSettings();
@@ -378,24 +379,12 @@ async mounted() {
     },
 
     beforeUnmount() {
-        if (this._mouseMoveHandler) {
-            document.removeEventListener('mousemove', this._mouseMoveHandler);
-        }
-        if (this._scrollHandler) {
-            window.removeEventListener('scroll', this._scrollHandler);
-        }
-        if (this._onlineHandler) {
-            window.removeEventListener('online', this._onlineHandler);
-        }
-        if (this._offlineHandler) {
-            window.removeEventListener('offline', this._offlineHandler);
-        }
-        if (this.dateTimeInterval) {
-            clearInterval(this.dateTimeInterval);
-        }
-        if (this._hoverChecker) {
-            document.removeEventListener('mouseover', this._hoverChecker);
-        }
+        if (this._mouseMoveHandler) document.removeEventListener('mousemove', this._mouseMoveHandler);
+        if (this._scrollHandler) window.removeEventListener('scroll', this._scrollHandler);
+        if (this._onlineHandler) window.removeEventListener('online', this._onlineHandler);
+        if (this._offlineHandler) window.removeEventListener('offline', this._offlineHandler);
+        if (this.dateTimeInterval) clearInterval(this.dateTimeInterval);
+        if (this._hoverChecker) document.removeEventListener('mouseover', this._hoverChecker);
     },
 
     computed: {
@@ -553,131 +542,6 @@ async mounted() {
                 avgSessionLength
             };
         },
-
-        // Data Export/Import Methods
-        // Data Export/Import Methods
-        // Data Export Methods (PDF Support)
-        async exportUserData() {
-            try {
-                // Check if jsPDF is loaded
-                if (!window.jspdf) {
-                    this.showInlineMessage('PDF Library not loaded. Please refresh.');
-                    return;
-                }
-
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                
-                // 1. Header
-                doc.setFontSize(22);
-                doc.setTextColor(139, 92, 246); // Purple
-                doc.text(`StudyFlow Report`, 20, 20);
-                
-                // 2. User Info
-                doc.setFontSize(12);
-                doc.setTextColor(0, 0, 0);
-                doc.text(`User: ${this.currentUser}`, 20, 30);
-                doc.text(`Email: ${this.userEmail}`, 20, 36);
-                doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 42);
-                
-                // Divider
-                doc.setDrawColor(200, 200, 200);
-                doc.line(20, 48, 190, 48);
-
-                // 3. Statistics
-                doc.setFontSize(16);
-                doc.setTextColor(100, 100, 100);
-                doc.text('Statistics', 20, 60);
-                
-                doc.setFontSize(12);
-                doc.setTextColor(0, 0, 0);
-                doc.text(`• Total Focus Time: ${Math.floor(this.totalFocusTime / 60)}h ${this.totalFocusTime % 60}m`, 25, 70);
-                doc.text(`• Total Sessions: ${this.totalSessions}`, 25, 78);
-                doc.text(`• Completed Tasks: ${this.completedTasksCount}`, 25, 86);
-                doc.text(`• Current Streak: ${this.currentStreak} days`, 25, 94);
-                
-                // 4. Pending Tasks List
-                doc.setFontSize(16);
-                doc.setTextColor(100, 100, 100);
-                doc.text('Pending Tasks', 20, 110);
-                
-                let y = 120;
-                const pendingTasks = this.tasks.filter(t => !t.completed);
-                
-                if (pendingTasks.length > 0) {
-                    doc.setFontSize(11);
-                    doc.setTextColor(0, 0, 0);
-                    
-                    pendingTasks.forEach((task, index) => {
-                        // Add new page if list is too long
-                        if (y > 270) { 
-                            doc.addPage(); 
-                            y = 20; 
-                        }
-                        doc.text(`${index + 1}. ${task.text}`, 25, y);
-                        y += 8;
-                    });
-                } else {
-                    doc.setFontSize(11);
-                    doc.setTextColor(150, 150, 150);
-                    doc.text('No pending tasks! Great job!', 25, y);
-                }
-
-                // 5. Save PDF
-                doc.save(`StudyFlow_Report_${this.currentUser}.pdf`);
-                this.showInlineMessage('Report downloaded as PDF! 📄');
-                
-            } catch (error) {
-                console.error("PDF Export Error:", error);
-                this.showInlineMessage('Failed to generate PDF');
-            }
-        },
-
-        handleImportFile(event) {
-            this.importFile = event.target.files[0];
-        },
-
-        async importUserData() {
-            if (!this.importFile) {
-                this.showInlineMessage('Please select a file to import');
-                return;
-            }
-
-            try {
-                const text = await this.importFile.text();
-                const data = JSON.parse(text);
-
-                // Import subjects
-                if (data.subjects) {
-                    for (const subject of data.subjects) {
-                        await this.apiRequest('/api/subjects', 'POST', subject);
-                    }
-                }
-
-                // Import tasks
-                if (data.tasks) {
-                    for (const task of data.tasks) {
-                        await this.apiRequest('/api/tasks', 'POST', task);
-                    }
-                }
-
-                // Import goals
-                if (data.goals) {
-                    for (const goal of data.goals) {
-                        await this.apiRequest('/api/goals', 'POST', goal);
-                    }
-                }
-
-                // Reload data
-                await this.loadUserData();
-
-                this.showInlineMessage('Data imported successfully!');
-                this.importFile = null;
-            } catch (error) {
-                this.showInlineMessage('Failed to import data. Please check the file format.');
-            }
-        }
-
     },
 
     watch: {
@@ -716,6 +580,31 @@ async mounted() {
     },
 
     methods: {
+
+        createParticles() {
+            const container = this.$refs.particleContainer;
+            if (!container) return;
+
+            // আগের কোনো কণা থাকলে পরিষ্কার করা
+            container.innerHTML = '';
+            
+            // কতগুলো কণা বা particle চাও (এখানে ৫০টি দেওয়া হলো)
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // র‍্যান্ডম পজিশন এবং অ্যানিমেশন ডিলে
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 2) + 's'; // ২ থেকে ৫ সেকেন্ডের স্পিড
+                
+                container.appendChild(particle);
+            }
+        },
+
         updateDateTime() {
             const now = new Date();
             this.currentDateTime = now.toLocaleDateString('en-US', {
@@ -897,7 +786,6 @@ async mounted() {
         },
 
         async handleRegister() {
-            // Validate form
             if (!this.registerForm.firstName.trim()) {
                 this.showInlineMessage('First name is required');
                 return;
@@ -930,7 +818,6 @@ async mounted() {
                 this.loginForm.username = this.registerForm.username;
                 this.showInlineMessage('Account created successfully! Please login.');
                 
-                // Clear register form
                 this.registerForm = {
                     username: '',
                     password: '',
@@ -1596,24 +1483,19 @@ async mounted() {
                 return;
             }
             this.updatingCharts = true;
-            console.log('Updating charts for view:', this.analyticsView);
             if (!this.$refs.studyTimeChart || !this.$refs.subjectChart) {
-                console.log('Chart refs not available');
                 return;
             }
 
             if (typeof Chart === 'undefined') {
-                console.error('Chart.js not loaded');
                 return;
             }
 
             if (this.studyTimeChart) {
                 this.studyTimeChart.destroy();
-                console.log('Destroyed study time chart');
             }
             if (this.subjectChart) {
                 this.subjectChart.destroy();
-                console.log('Destroyed subject chart');
             }
 
             const now = new Date();
@@ -1636,7 +1518,6 @@ async mounted() {
             const filteredSessions = this.sessions.filter(s =>
                 new Date(s.timestamp) >= startDate
             );
-            console.log('Filtered sessions:', filteredSessions.length);
 
             const ctx1 = this.$refs.studyTimeChart.getContext('2d');
 
@@ -1703,7 +1584,6 @@ async mounted() {
                     }
                 }
             });
-                console.log('Study time chart created successfully');
             } catch (e) {
                 console.error('Error creating study time chart:', e);
             }
@@ -1751,7 +1631,6 @@ async mounted() {
                     }
                 }
             });
-                console.log('Subject chart created successfully');
             } catch (e) {
                 console.error('Error creating subject chart:', e);
             }
@@ -1791,13 +1670,11 @@ async mounted() {
         },
 
         loadMusicSettings() {
-            console.log('Loading music settings for user:', this.currentUser);
             const savedPlaylists = localStorage.getItem(`studyflow_playlists_${this.currentUser}`);
             if (savedPlaylists) {
                 this.musicPlaylists = JSON.parse(savedPlaylists);
             }
             if (this.musicPlaylists.length === 0) {
-                console.log('No playlists found, adding default');
                 // Add default playlists with free music
                 this.musicPlaylists = [
                     {
@@ -1829,7 +1706,6 @@ async mounted() {
                 ];
                 localStorage.setItem(`studyflow_playlists_${this.currentUser}`, JSON.stringify(this.musicPlaylists));
             }
-            console.log('Music playlists loaded:', this.musicPlaylists);
         },
         toggleMusic() {
             if (!this.currentTrack) return;
@@ -1851,17 +1727,14 @@ async mounted() {
             }
         },
         playTrack(playlist, track) {
-            console.log('Playing track:', track.name, 'URL:', track.url);
             this.currentPlaylist = playlist;
             this.currentTrack = track;
             this.$nextTick(() => {
-                console.log('Audio player ref:', this.$refs.audioPlayer);
                 this.$refs.audioPlayer.src = track.url;
                 this.$refs.audioPlayer.volume = this.musicVolume / 100;
                 this.$refs.audioPlayer.play().then(() => {
                     this.isPlaying = true;
                 }).catch(e => {
-                    console.log('Play failed:', e);
                     this.showInlineMessage("Error playing track. Check URL.");
                 });
             });
@@ -1903,7 +1776,6 @@ async mounted() {
                     });
                 }
             }
-            // Reset the input
             event.target.value = '';
         },
         removeTrackFromPlaylist(index) {
@@ -1945,64 +1817,68 @@ async mounted() {
             }
         },
 
-        // Assets/script.js এর loadYouTubeVideo ফাংশনটি এভাবে পরিবর্তন করুন:
+        loadYouTubeVideo(videoId, title = 'YouTube Video') {
+            this.youtubeVideoId = videoId;
+            this.showYouTubePlayer = true;
+            this.showInlineMessage(`🎵 Loading: ${title}...`);
+            
+            let retryCount = 0;
+            const maxRetries = 10; 
 
-loadYouTubeVideo(videoId, title = 'YouTube Video') {
-    this.youtubeVideoId = videoId;
-    this.showYouTubePlayer = true;
-    this.showInlineMessage(`🎵 Loading: ${title}...`);
-    
-    // Retry counter যোগ করা হলো
-    let retryCount = 0;
-    const maxRetries = 10; // সর্বোচ্চ ১০ বার চেষ্টা করবে
+            const checkYT = () => {
+                if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
+                    retryCount++;
+                    if (retryCount > maxRetries) {
+                        this.showInlineMessage("YouTube API failed to load. Please refresh.");
+                        return;
+                    }
+                    setTimeout(checkYT, 1000);
+                    return;
+                }
 
-    const checkYT = () => {
-        if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
-            retryCount++;
-            if (retryCount > maxRetries) {
-                this.showInlineMessage("YouTube API failed to load. Please refresh.");
-                return;
-            }
-            // ১ সেকেন্ড পর আবার চেষ্টা করবে
-            setTimeout(checkYT, 1000);
-            return;
-        }
-
-        this.$nextTick(() => {
-            if (this.youtubePlayer) {
-                this.youtubePlayer.loadVideoById(videoId);
-            } else {
-                this.youtubePlayer = new YT.Player('youtube-player', {
-                    height: '100%',
-                    width: '100%',
-                    videoId: videoId,
-                    playerVars: {
-                        'playsinline': 1,
-                        'origin': window.location.origin
-                    },
-                    events: {
-                        'onReady': (event) => {
-                            event.target.playVideo();
-                            event.target.setVolume(this.youtubeVolume);
-                        },
-                        'onStateChange': (event) => {
-                            this.isPlaying = (event.data === YT.PlayerState.PLAYING);
-                        }
+                this.$nextTick(() => {
+                    if (this.youtubePlayer) {
+                        this.youtubePlayer.loadVideoById(videoId);
+                    } else {
+                        this.youtubePlayer = new YT.Player('youtube-player', {
+                            height: '100%',
+                            width: '100%',
+                            videoId: videoId,
+                            playerVars: {
+                                'playsinline': 1,
+                                'origin': window.location.origin
+                            },
+                            events: {
+                                'onReady': (event) => {
+                                    event.target.playVideo();
+                                    event.target.setVolume(this.youtubeVolume);
+                                },
+                                'onStateChange': (event) => {
+                                    this.isPlaying = (event.data === YT.PlayerState.PLAYING);
+                                }
+                            }
+                        });
                     }
                 });
-            }
-        });
-    };
+            };
 
-    checkYT(); // ফাংশন কল শুরু
-},
+            checkYT(); 
+        },
 
         playYouTubeVideo(video) {
             this.loadYouTubeVideo(video.id, video.title);
         },
 
         openYouTubeLink(videoId) {
-            window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+            // FIX: Now uses internal player instead of window.open
+            this.loadYouTubeVideo(videoId, 'YouTube Video');
+        },
+
+        // ADDED: Option to open in new tab manually if needed
+        openInYouTube() {
+            if (this.youtubeVideoId) {
+                window.open(`https://www.youtube.com/watch?v=${this.youtubeVideoId}`, '_blank');
+            }
         },
 
         loadCustomYouTubeUrl() {
@@ -2013,7 +1889,8 @@ loadYouTubeVideo(videoId, title = 'YouTube Video') {
 
             const videoId = this.extractYouTubeId(this.youtubeUrl);
             if (videoId) {
-                this.openYouTubeLink(videoId);
+                // FIX: Now uses internal player
+                this.loadYouTubeVideo(videoId, 'Custom Video'); 
                 this.youtubeUrl = '';
             } else {
                 this.showInlineMessage('Invalid YouTube URL. Please check the link.');
@@ -2123,6 +2000,165 @@ loadYouTubeVideo(videoId, title = 'YouTube Video') {
                 'bg-gradient-to-br from-indigo-500 to-purple-500'
             ];
             return gradients[index % gradients.length];
+        },
+
+        // Data Export Methods (PDF Support)
+        async exportUserData() {
+            try {
+                // Check if jsPDF is loaded
+                if (!window.jspdf) {
+                    this.showInlineMessage('PDF Library not loaded. Please refresh.');
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // 1. Header
+                doc.setFontSize(22);
+                doc.setTextColor(139, 92, 246); // Purple
+                doc.text(`StudyFlow Report`, 20, 20);
+                
+                // 2. User Info
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`User: ${this.currentUser}`, 20, 30);
+                doc.text(`Email: ${this.userEmail}`, 20, 36);
+                doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 42);
+                
+                // Divider
+                doc.setDrawColor(200, 200, 200);
+                doc.line(20, 48, 190, 48);
+
+                // 3. Statistics
+                doc.setFontSize(16);
+                doc.setTextColor(100, 100, 100);
+                doc.text('Statistics', 20, 60);
+                
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`• Total Focus Time: ${Math.floor(this.totalFocusTime / 60)}h ${this.totalFocusTime % 60}m`, 25, 70);
+                doc.text(`• Total Sessions: ${this.totalSessions}`, 25, 78);
+                doc.text(`• Completed Tasks: ${this.completedTasksCount}`, 25, 86);
+                doc.text(`• Current Streak: ${this.currentStreak} days`, 25, 94);
+                
+                // 4. Pending Tasks List
+                doc.setFontSize(16);
+                doc.setTextColor(100, 100, 100);
+                doc.text('Pending Tasks', 20, 110);
+                
+                let y = 120;
+                const pendingTasks = this.tasks.filter(t => !t.completed);
+                
+                if (pendingTasks.length > 0) {
+                    doc.setFontSize(11);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    pendingTasks.forEach((task, index) => {
+                        // Add new page if list is too long
+                        if (y > 270) { 
+                            doc.addPage(); 
+                            y = 20; 
+                        }
+                        doc.text(`${index + 1}. ${task.text}`, 25, y);
+                        y += 8;
+                    });
+                } else {
+                    doc.setFontSize(11);
+                    doc.setTextColor(150, 150, 150);
+                    doc.text('No pending tasks! Great job!', 25, y);
+                }
+
+                // 5. Save PDF
+                doc.save(`StudyFlow_Report_${this.currentUser}.pdf`);
+                this.showInlineMessage('Report downloaded as PDF! 📄');
+                
+            } catch (error) {
+                console.error("PDF Export Error:", error);
+                this.showInlineMessage('Failed to generate PDF');
+            }
+        },
+
+        // এই ফাংশনটি যোগ করুন (Raw JSON ব্যাকআপ ডাউনলোড করার জন্য)
+        downloadBackup() {
+            const data = {
+                user: {
+                    username: this.currentUser,
+                    email: this.userEmail,
+                    firstName: this.userFullName.split(' ')[0],
+                    lastName: this.userFullName.split(' ').slice(1).join(' ')
+                },
+                subjects: this.subjects,
+                tasks: this.tasks,
+                sessions: this.sessions,
+                goals: this.goals,
+                achievements: this.achievements,
+                musicPlaylists: this.musicPlaylists,
+                settings: {
+                    theme: this.currentTheme,
+                    timer: {
+                        focus: this.focusDuration,
+                        short: this.shortBreakDuration,
+                        long: this.longBreakDuration
+                    }
+                },
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", `studyflow-backup-${this.currentUser}-${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            
+            this.showInlineMessage('Backup file downloaded successfully! 💾');
+        },
+
+        handleImportFile(event) {
+            this.importFile = event.target.files[0];
+        },
+
+        async importUserData() {
+            if (!this.importFile) {
+                this.showInlineMessage('Please select a file to import');
+                return;
+            }
+
+            try {
+                const text = await this.importFile.text();
+                const data = JSON.parse(text);
+
+                // Import subjects
+                if (data.subjects) {
+                    for (const subject of data.subjects) {
+                        await this.apiRequest('/api/subjects', { method: 'POST', body: JSON.stringify(subject) });
+                    }
+                }
+
+                // Import tasks
+                if (data.tasks) {
+                    for (const task of data.tasks) {
+                        await this.apiRequest('/api/tasks', { method: 'POST', body: JSON.stringify(task) });
+                    }
+                }
+
+                // Import goals
+                if (data.goals) {
+                    for (const goal of data.goals) {
+                        await this.apiRequest('/api/goals', { method: 'POST', body: JSON.stringify(goal) });
+                    }
+                }
+
+                // Reload data
+                await this.loadUserData();
+
+                this.showInlineMessage('Data imported successfully!');
+                this.importFile = null;
+            } catch (error) {
+                this.showInlineMessage('Failed to import data. Please check the file format.');
+            }
         }
     }
 }).mount('#app');

@@ -7,7 +7,13 @@ const userSchema = mongoose.Schema({
     password: { type: String, required: true },
     firstName: String,
     lastName: String,
-    profileImage: String
+    profileImage: String,
+    // 👇 নতুন রোল ফিল্ড যোগ করা হয়েছে
+    role: {
+        type: String,
+        enum: ['user', 'admin'], // শুধু user বা admin হতে পারবে
+        default: 'user'          // অটোমেটিক 'user' সেট হবে
+    }
 }, { timestamps: true });
 
 // Match password method
