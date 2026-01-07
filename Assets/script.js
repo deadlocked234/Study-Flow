@@ -1669,37 +1669,35 @@ createApp({
             return score;
         },
 
+        // --- UPDATED MUSIC FUNCTIONS ---
+
         loadMusicSettings() {
             const savedPlaylists = localStorage.getItem(`studyflow_playlists_${this.currentUser}`);
             if (savedPlaylists) {
                 this.musicPlaylists = JSON.parse(savedPlaylists);
             }
-            if (this.musicPlaylists.length === 0) {
-                // Add default playlists with free music
+            
+            // Replaced Default Playlists with Working CDN Links (Pixabay)
+            if (this.musicPlaylists.length === 0 || this.musicPlaylists[0].name === 'Free Ambient Music') {
                 this.musicPlaylists = [
                     {
-                        id: Date.now(),
-                        name: 'Free Ambient Music',
+                        id: 'default_1',
+                        name: 'Lofi & Chill (Demo)',
                         tracks: [
                             {
                                 id: 1,
-                                name: 'Relaxing Bell',
-                                url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav'
+                                name: 'Chill Lofi Beat',
+                                url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3'
                             },
                             {
                                 id: 2,
-                                name: 'Soft Beep',
-                                url: 'https://www.soundjay.com/button/beep-07.wav'
+                                name: 'Rain & Piano',
+                                url: 'https://cdn.pixabay.com/download/audio/2022/03/09/audio_c8c8a73467.mp3'
                             },
                             {
                                 id: 3,
-                                name: 'Gentle Bell',
-                                url: 'https://www.soundjay.com/misc/sounds/bell-ringing-04.wav'
-                            },
-                            {
-                                id: 4,
-                                name: 'Classic Tune',
-                                url: 'https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav'
+                                name: 'Soft Ambient',
+                                url: 'https://cdn.pixabay.com/download/audio/2022/02/07/audio_6593f64996.mp3'
                             }
                         ]
                     }
@@ -1707,38 +1705,64 @@ createApp({
                 localStorage.setItem(`studyflow_playlists_${this.currentUser}`, JSON.stringify(this.musicPlaylists));
             }
         },
+
         toggleMusic() {
-            if (!this.currentTrack) return;
+            const audio = this.$refs.audioPlayer;
+            if (!this.currentTrack || !audio) return;
+
             if (this.isPlaying) {
-                this.$refs.audioPlayer.pause();
+                audio.pause();
+                this.isPlaying = false;
             } else {
-                this.$refs.audioPlayer.play();
+                audio.play().then(() => {
+                    this.isPlaying = true;
+                }).catch(e => {
+                    console.error(e);
+                    this.isPlaying = false;
+                });
             }
-            this.isPlaying = !this.isPlaying;
         },
+
         stopMusic() {
             this.$refs.audioPlayer.pause();
             this.$refs.audioPlayer.currentTime = 0;
             this.isPlaying = false;
         },
+
         updateVolume() {
             if (this.$refs.audioPlayer) {
                 this.$refs.audioPlayer.volume = this.musicVolume / 100;
             }
         },
+
         playTrack(playlist, track) {
             this.currentPlaylist = playlist;
             this.currentTrack = track;
-            this.$nextTick(() => {
-                this.$refs.audioPlayer.src = track.url;
-                this.$refs.audioPlayer.volume = this.musicVolume / 100;
-                this.$refs.audioPlayer.play().then(() => {
+            
+            this.$nextTick(async () => {
+                const audio = this.$refs.audioPlayer;
+                if(!audio) return;
+
+                audio.src = track.url;
+                audio.load(); // Force load source
+                audio.volume = this.musicVolume / 100;
+
+                try {
+                    await audio.play();
                     this.isPlaying = true;
-                }).catch(e => {
-                    this.showInlineMessage("Error playing track. Check URL.");
-                });
+                } catch (e) {
+                    console.error("Playback failed:", e);
+                    // Check if link is blob (local file expired) or network error
+                    if (track.url.startsWith('blob:')) {
+                        this.showInlineMessage("⚠️ Local file expired. Please re-upload.");
+                    } else {
+                        this.showInlineMessage("⚠️ Error playing track. Link might be broken.");
+                    }
+                    this.isPlaying = false;
+                }
             });
         },
+
         onTrackEnded() {
             this.isPlaying = false;
             if (this.currentPlaylist) {
@@ -1748,10 +1772,18 @@ createApp({
                 }
             }
         },
-        handleAudioError() {
+
+        handleAudioError(e) {
+            console.error("Audio Error:", e);
             this.isPlaying = false;
-            this.showInlineMessage("Cannot play this audio file.");
+            
+            if (this.currentTrack && this.currentTrack.url.startsWith('blob:')) {
+                // Silent fail for blob expiration often better handled in play catch block
+            } else {
+               this.showInlineMessage("🚫 Cannot play audio source."); 
+            }
         },
+
         addTrackToPlaylist() {
             if (!this.newTrackName || !this.newTrackUrl) return;
             if (!this.editingPlaylist.tracks) this.editingPlaylist.tracks = [];
@@ -1767,17 +1799,26 @@ createApp({
         addFilesToPlaylist(event) {
             const files = event.target.files;
             if (!this.editingPlaylist.tracks) this.editingPlaylist.tracks = [];
+            
+            let addedCount = 0;
             for (let file of files) {
                 if (file.type.startsWith('audio/')) {
                     this.editingPlaylist.tracks.push({
                         id: Date.now() + Math.random(),
                         name: file.name,
-                        url: URL.createObjectURL(file)
+                        url: URL.createObjectURL(file),
+                        isLocal: true 
                     });
+                    addedCount++;
                 }
+            }
+            
+            if (addedCount > 0) {
+                this.showInlineMessage("⚠️ Note: Local files will disappear if you refresh the page.");
             }
             event.target.value = '';
         },
+
         removeTrackFromPlaylist(index) {
             this.editingPlaylist.tracks.splice(index, 1);
         },

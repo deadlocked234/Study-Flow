@@ -537,7 +537,7 @@
        </div>
        <p class="text-xs opacity-70">💡 Use direct MP3 links. Many streaming services block playback.</p>
       </div>
-      <div v-if="editingPlaylist.tracks &amp;&amp; editingPlaylist.tracks.length > 0" class="mb-4">
+      <div v-if="editingPlaylist.tracks && editingPlaylist.tracks.length > 0" class="mb-4">
        <div class="space-y-2">
         <div v-for="(track, index) in editingPlaylist.tracks" :key="track.id" class="flex items-center justify-between glass-strong p-3 rounded-lg">
          <div class="flex items-center gap-2"><i class="ph-bold ph-music-note text-purple-400"></i> <span class="text-sm">{{ track.name }}</span>
@@ -596,7 +596,7 @@
       <p class="text-xs opacity-70 mt-2">🎵 Focus music playing from YouTube</p>
      </div><button @click="showMusicModal = false" class="w-full btn-secondary px-6 py-3 rounded-xl font-semibold text-white"> Close </button>
     </div>
-   </div><div v-if="!showLoader &amp;&amp; !isAuthenticated" class="min-h-screen flex items-center justify-center p-4">
+   </div><div v-if="!showLoader && !isAuthenticated" class="min-h-screen flex items-center justify-center p-4">
     <div class="glass rounded-3xl p-8 w-full max-w-md animate-fadeIn">
      <div class="text-center mb-8"><i class="ph-bold ph-brain text-6xl text-purple-400 mb-4"></i>
       <h2 class="text-3xl font-bold gradient-text mb-2">StudyFlow</h2>
@@ -668,492 +668,533 @@
       <p class="text-center mt-6 opacity-70">Already have an account? <button @click="authMode = 'login'" class="text-purple-400 hover:text-purple-300 font-semibold"> Sign In </button></p>
      </div>
     </div>
-   </div><button v-if="!showLoader &amp;&amp; isAuthenticated &amp;&amp; showScrollTop" @click="scrollToTop" class="scroll-to-top" :class="{ 'visible': showScrollTop }" aria-label="Scroll to top"> <i class="ph-bold ph-arrow-up text-2xl text-white"></i> </button> <div v-if="!showLoader &amp;&amp; isAuthenticated" class="min-h-screen flex"><aside class="hidden lg:flex flex-col w-64 glass-strong border-r border-gray-700 p-6">
-     <div class="mb-8"><button @click="reloadApp" class="flex items-center gap-3 mb-2 hover:opacity-80 transition-opacity"> <i class="ph-bold ph-brain text-3xl text-purple-400"></i> <h1 class="text-2xl font-bold gradient-text">StudyFlow</h1></button>
-      <p class="text-sm opacity-70">Hello, {{ userFullName }}!</p>
-      <div class="flex items-center gap-2 mt-2">
-       <div :class="isOnline ? 'bg-green-500' : 'bg-red-500'" class="w-2 h-2 rounded-full animate-pulse"></div>
-       <span class="text-xs opacity-60">{{ isOnline ? 'Online' : 'Offline' }}</span>
+   </div><button v-if="!showLoader && isAuthenticated && showScrollTop" @click="scrollToTop" class="scroll-to-top" :class="{ 'visible': showScrollTop }" aria-label="Scroll to top"> <i class="ph-bold ph-arrow-up text-2xl text-white"></i> </button> <div v-if="!showLoader && isAuthenticated" class="min-h-screen flex"><aside class="hidden lg:flex flex-col w-64 glass-strong border-r border-gray-700 p-6">
+      <div class="mb-8"><button @click="reloadApp" class="flex items-center gap-3 mb-2 hover:opacity-80 transition-opacity"> <i class="ph-bold ph-brain text-3xl text-purple-400"></i> <h1 class="text-2xl font-bold gradient-text">StudyFlow</h1></button>
+       <p class="text-sm opacity-70">Hello, {{ userFullName }}!</p>
+       <div class="flex items-center gap-2 mt-2">
+        <div :class="isOnline ? 'bg-green-500' : 'bg-red-500'" class="w-2 h-2 rounded-full animate-pulse"></div>
+        <span class="text-xs opacity-60">{{ isOnline ? 'Online' : 'Offline' }}</span>
+       </div>
+      </div>
+      <nav class="flex-1 space-y-2"><button @click="currentView = 'home'" :class="currentView === 'home' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-house text-xl"></i> Home </button> <button @click="currentView = 'timer'" :class="currentView === 'timer' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-timer text-xl"></i> Focus Timer </button> <button @click="currentView = 'tasks'" :class="currentView === 'tasks' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-check-square text-xl"></i> Daily Tasks </button> <button @click="currentView = 'analytics'" :class="currentView === 'analytics' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-chart-bar text-xl"></i> Analytics </button>
+       <div class="pt-4 border-t border-gray-700"><button @click="showThemeModal = true" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium hover:bg-white/10"> <i class="ph-bold ph-palette text-xl"></i> Themes </button> <button @click="showNotificationSettings = true" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium hover:bg-white/10"> <i class="ph-bold ph-bell text-xl"></i> Notifications </button> <button @click="showAdvancedTimer = true" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium hover:bg-white/10"> <i class="ph-bold ph-timer text-xl"></i> Timer Settings </button> <button @click="showMusicModal = true" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium hover:bg-white/10"> <i class="ph-bold ph-music-notes text-xl"></i> Music <span v-if="isPlaying" class="ml-auto"> <i class="ph-fill ph-speaker-high text-green-400 animate-pulse"></i> </span> </button> <button @click="showDataModal = true" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium hover:bg-white/10"> <i class="ph-bold ph-database text-xl"></i> Data Management </button> <button @click="handleLogout" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-red-400 hover:bg-red-500/10 transition-all"> <i class="ph-bold ph-sign-out text-xl"></i> Logout </button>
+       </div>
+      </nav>
+     </aside><main class="flex-1 flex flex-col"><header class="lg:hidden glass-strong border-b border-gray-700 p-4 flex items-center justify-between"><button @click="mobileMenuOpen = !mobileMenuOpen" class="text-2xl text-purple-400"> <i :class="mobileMenuOpen ? 'ph-bold ph-x' : 'ph-bold ph-list'" class="text-3xl"></i> </button> <button @click="reloadApp" class="text-xl font-bold gradient-text hover:opacity-80 transition-opacity"> StudyFlow </button>
+       <div class="flex items-center gap-2">
+        <div :class="isOnline ? 'bg-green-500' : 'bg-red-500'" class="w-2 h-2 rounded-full animate-pulse"></div>
+        <span class="text-xs opacity-60 lg:hidden">{{ isOnline ? 'Online' : 'Offline' }}</span>
+       </div>
+      </header><div v-if="mobileMenuOpen" class="lg:hidden glass-strong border-b border-gray-700 p-4 animate-slideIn">
+       <nav class="space-y-2"><button @click="currentView = 'home'; mobileMenuOpen = false" :class="currentView === 'home' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-house text-xl"></i> Home </button> <button @click="currentView = 'timer'; mobileMenuOpen = false" :class="currentView === 'timer' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-timer text-xl"></i> Focus Timer </button> <button @click="currentView = 'tasks'; mobileMenuOpen = false" :class="currentView === 'tasks' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-check-square text-xl"></i> Daily Tasks </button> <button @click="currentView = 'analytics'; mobileMenuOpen = false" :class="currentView === 'analytics' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-chart-bar text-xl"></i> Analytics </button>
+        <div class="pt-2 border-t border-gray-700"><button @click="showThemeModal = true; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-palette text-xl"></i> Themes </button> <button @click="showNotificationSettings = true; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-bell text-xl"></i> Notifications </button> <button @click="showAdvancedTimer = true; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-timer text-xl"></i> Timer Settings </button> <button @click="showMusicModal = true; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-music-notes text-xl"></i> Music <span v-if="isPlaying" class="ml-auto"> <i class="ph-fill ph-speaker-high text-green-400 animate-pulse"></i> </span> </button>
+        <button @click="showDataModal = true; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-database text-xl"></i> Data Management </button>
+        </div><button @click="handleLogout" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-red-400"> <i class="ph-bold ph-sign-out text-xl"></i> Logout </button>
+       </nav>
+      </div><div class="flex-1 overflow-y-auto p-4 lg:p-8"><div v-if="currentView === 'home'" class="max-w-6xl mx-auto animate-fadeIn"><div class="text-center mb-12">
+         <div class="mb-6"><i class="ph-bold ph-brain text-7xl text-purple-400 animate-pulse"></i>
+         </div>
+         <h1 class="text-5xl md:text-6xl font-bold gradient-text mb-4">Welcome to StudyFlow</h1>
+         <p class="text-xl md:text-2xl opacity-80 mb-8">Your Ultimate Focus &amp; Productivity Companion</p>
+         <div class="flex flex-wrap justify-center gap-4"><button @click="currentView = 'timer'" class="btn-primary px-8 py-4 rounded-xl font-semibold text-lg flex items-center gap-2"> <i class="ph-bold ph-play text-xl"></i> Start Focusing </button> <button @click="currentView = 'analytics'" class="btn-secondary px-8 py-4 rounded-xl font-semibold text-lg flex items-center gap-2"> <i class="ph-bold ph-chart-bar text-xl"></i> View Stats </button>
+         </div>
+        </div><div class="mb-12">
+         <h2 class="text-3xl font-bold mb-8 text-center">Powerful Features</h2>
+         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"><div class="glass rounded-2xl p-6 card-hover">
+           <div class="w-14 h-14 rounded-xl bg-purple-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-timer text-3xl text-purple-400"></i>
+           </div>
+           <h3 class="text-xl font-bold mb-2">Pomodoro Timer</h3>
+           <p class="opacity-70">Stay focused with customizable work sessions and breaks. Choose from preset durations or create your own custom timers.</p>
+          </div><div class="glass rounded-2xl p-6 card-hover">
+           <div class="w-14 h-14 rounded-xl bg-green-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-check-square text-3xl text-green-400"></i>
+           </div>
+           <h3 class="text-xl font-bold mb-2">Task Management</h3>
+           <p class="opacity-70">Organize your daily tasks efficiently. Track completion and stay on top of your to-do list with ease.</p>
+          </div><div class="glass rounded-2xl p-6 card-hover">
+           <div class="w-14 h-14 rounded-xl bg-blue-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-chart-bar text-3xl text-blue-400"></i>
+           </div>
+           <h3 class="text-xl font-bold mb-2">Study Analytics</h3>
+           <p class="opacity-70">Track your progress with detailed statistics. See how much time you've spent on each subject and monitor your productivity.</p>
+          </div><div class="glass rounded-2xl p-6 card-hover">
+           <div class="w-14 h-14 rounded-xl bg-pink-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-palette text-3xl text-pink-400"></i>
+           </div>
+           <h3 class="text-xl font-bold mb-2">Beautiful Themes</h3>
+           <p class="opacity-70">Personalize your experience with 10 stunning themes. From dark mode to vibrant gradients, find your perfect aesthetic.</p>
+          </div><div class="glass rounded-2xl p-6 card-hover">
+           <div class="w-14 h-14 rounded-xl bg-yellow-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-music-notes text-3xl text-yellow-400"></i>
+           </div>
+           <h3 class="text-xl font-bold mb-2">Focus Music</h3>
+           <p class="opacity-70">Create custom playlists to enhance your concentration. Add your favorite study music and control playback seamlessly.</p>
+          </div><div class="glass rounded-2xl p-6 card-hover">
+           <div class="w-14 h-14 rounded-xl bg-red-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-bell text-3xl text-red-400"></i>
+           </div>
+           <h3 class="text-xl font-bold mb-2">Smart Alarms</h3>
+           <p class="opacity-70">Choose from multiple alarm sounds and enable 50-second warnings. Never miss the end of your focus session.</p>
+          </div>
+         </div>
+        </div><div class="mb-12">
+         <h2 class="text-3xl font-bold mb-8 text-center">How It Works</h2>
+         <div class="grid md:grid-cols-3 gap-6">
+          <div class="text-center">
+           <div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-3xl font-bold mx-auto mb-4">
+            1
+           </div>
+           <h3 class="text-xl font-bold mb-2">Set Your Goal</h3>
+           <p class="opacity-70">Choose a subject and task you want to focus on. Select your preferred timer duration.</p>
+          </div>
+          <div class="text-center">
+           <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-3xl font-bold mx-auto mb-4">
+            2
+           </div>
+           <h3 class="text-xl font-bold mb-2">Stay Focused</h3>
+           <p class="opacity-70">Work without distractions during your focus session. The timer keeps you on track.</p>
+          </div>
+          <div class="text-center">
+           <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-3xl font-bold mx-auto mb-4">
+            3
+           </div>
+           <h3 class="text-xl font-bold mb-2">Track Progress</h3>
+           <p class="opacity-70">Review your analytics and celebrate your achievements. Watch your productivity grow!</p>
+          </div>
+         </div>
+        </div><div v-if="totalSessions > 0" class="mb-12">
+         <h2 class="text-3xl font-bold mb-8 text-center">Your Progress Today</h2>
+         <div class="grid md:grid-cols-4 gap-6">
+          <div class="glass rounded-2xl p-6 text-center card-hover"><i class="ph-bold ph-clock text-5xl text-purple-400 mb-3"></i>
+           <div class="text-4xl font-bold mb-2">
+            {{ totalFocusTime }}
+           </div>
+           <div class="opacity-70">
+            Minutes Focused
+           </div>
+          </div>
+          <div class="glass rounded-2xl p-6 text-center card-hover"><i class="ph-bold ph-fire text-5xl text-orange-400 mb-3"></i>
+           <div class="text-4xl font-bold mb-2">
+            {{ totalSessions }}
+           </div>
+           <div class="opacity-70">
+            Sessions Completed
+           </div>
+          </div>
+          <div class="glass rounded-2xl p-6 text-center card-hover"><i class="ph-bold ph-check-circle text-5xl text-green-400 mb-3"></i>
+           <div class="text-4xl font-bold mb-2">
+            {{ completedTasksCount }}
+           </div>
+           <div class="opacity-70">
+            Tasks Completed
+           </div>
+          </div>
+          <div class="glass rounded-2xl p-6 text-center card-hover"><i class="ph-bold ph-book text-5xl text-blue-400 mb-3"></i>
+           <div class="text-4xl font-bold mb-2">
+            {{ subjects.length }}
+           </div>
+           <div class="opacity-70">
+            Subjects Added
+           </div>
+          </div>
+         </div>
+        </div><div class="glass rounded-3xl p-8 md:p-12 text-center">
+         <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Boost Your Productivity?</h2>
+         <p class="text-lg opacity-80 mb-8">Join thousands of students and professionals who trust StudyFlow for their focus needs.</p><button @click="currentView = 'timer'" class="btn-primary px-10 py-4 rounded-xl font-semibold text-lg flex items-center gap-2 mx-auto"> <i class="ph-bold ph-rocket-launch text-xl"></i> Get Started Now </button>
+        </div>
+       </div><div v-if="currentView === 'timer'" class="max-w-4xl mx-auto animate-fadeIn">
+  <h2 class="text-3xl font-bold mb-6 text-center md:text-left">Focus Timer</h2>
+  
+  <div class="glass rounded-2xl p-6 mb-6 text-center">
+   <i class="ph-bold ph-quotes text-3xl text-purple-400 mb-3"></i>
+   <p class="text-lg italic mb-2">"{{ currentQuote }}"</p>
+   <button @click="changeQuote" class="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1 mx-auto"> <i class="ph-bold ph-arrow-clockwise"></i> New Quote </button>
+  </div>
+
+  <div class="glass rounded-2xl p-4 sm:p-6 mb-6">
+   <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6">
+    <button @click="setTimerMode('focus')" :class="timerMode === 'focus' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-4 py-2 text-sm sm:text-base rounded-xl font-medium flex-grow sm:flex-grow-0"> Focus </button> 
+    <button @click="setTimerMode('shortBreak')" :class="timerMode === 'shortBreak' ? 'bg-green-600 text-white' : 'btn-secondary'" class="px-4 py-2 text-sm sm:text-base rounded-xl font-medium flex-grow sm:flex-grow-0"> Short Break </button> 
+    <button @click="setTimerMode('longBreak')" :class="timerMode === 'longBreak' ? 'bg-blue-600 text-white' : 'btn-secondary'" class="px-4 py-2 text-sm sm:text-base rounded-xl font-medium flex-grow sm:flex-grow-0"> Long Break </button> 
+    <button @click="setTimerMode('custom')" :class="timerMode === 'custom' ? 'bg-orange-600 text-white' : 'btn-secondary'" class="px-4 py-2 text-sm sm:text-base rounded-xl font-medium flex-grow sm:flex-grow-0"> Custom </button>
+   </div>
+
+   <div v-if="timerMode === 'custom'" class="mb-6 glass-strong p-4 rounded-xl">
+    <label class="block text-sm font-medium mb-2">Set Custom Duration (minutes)</label>
+    <div class="flex gap-3">
+     <input v-model.number="customMinutes" type="number" min="1" max="180" class="flex-1 px-4 py-3 rounded-xl glass w-full" placeholder="Enter minutes"> 
+     <button @click="applyCustomTime" class="btn-primary px-6 py-3 rounded-xl font-semibold"> Apply </button>
+    </div>
+   </div>
+
+   <div class="flex justify-center mb-6 relative w-full max-w-[280px] mx-auto aspect-square">
+    <div class="relative w-full h-full">
+     <svg viewBox="0 0 280 280" class="w-full h-full transform -rotate-90">
+      <circle cx="140" cy="140" r="120" stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="none" /> 
+      <circle cx="140" cy="140" r="120" :stroke="timerColor" stroke-width="12" fill="none" :stroke-dasharray="753.98" :stroke-dashoffset="timerProgress" class="progress-ring-circle" :class="{ 'pulse-warning': timeRemaining <= 60 && timerRunning }" />
+     </svg>
+     
+     <div class="absolute inset-0 flex flex-col items-center justify-center">
+      <div class="text-4xl sm:text-5xl font-bold">
+       {{ formattedTime }}
+      </div>
+      <div class="text-xs sm:text-sm opacity-70 mt-2">
+       {{ timerModeLabel }}
       </div>
      </div>
-     <nav class="flex-1 space-y-2"><button @click="currentView = 'home'" :class="currentView === 'home' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-house text-xl"></i> Home </button> <button @click="currentView = 'timer'" :class="currentView === 'timer' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-timer text-xl"></i> Focus Timer </button> <button @click="currentView = 'tasks'" :class="currentView === 'tasks' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-check-square text-xl"></i> Daily Tasks </button> <button @click="currentView = 'analytics'" :class="currentView === 'analytics' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-chart-bar text-xl"></i> Analytics </button>
-      <div class="pt-4 border-t border-gray-700"><button @click="showThemeModal = true" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium hover:bg-white/10"> <i class="ph-bold ph-palette text-xl"></i> Themes </button> <button @click="showNotificationSettings = true" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium hover:bg-white/10"> <i class="ph-bold ph-bell text-xl"></i> Notifications </button> <button @click="showAdvancedTimer = true" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium hover:bg-white/10"> <i class="ph-bold ph-timer text-xl"></i> Timer Settings </button> <button @click="showMusicModal = true" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium hover:bg-white/10"> <i class="ph-bold ph-music-notes text-xl"></i> Music <span v-if="isPlaying" class="ml-auto"> <i class="ph-fill ph-speaker-high text-green-400 animate-pulse"></i> </span> </button> <button @click="showDataModal = true" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium hover:bg-white/10"> <i class="ph-bold ph-database text-xl"></i> Data Management </button> <button @click="handleLogout" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-red-400 hover:bg-red-500/10 transition-all"> <i class="ph-bold ph-sign-out text-xl"></i> Logout </button>
-      </div>
-     </nav>
-    </aside><main class="flex-1 flex flex-col"><header class="lg:hidden glass-strong border-b border-gray-700 p-4 flex items-center justify-between"><button @click="mobileMenuOpen = !mobileMenuOpen" class="text-2xl text-purple-400"> <i :class="mobileMenuOpen ? 'ph-bold ph-x' : 'ph-bold ph-list'" class="text-3xl"></i> </button> <button @click="reloadApp" class="text-xl font-bold gradient-text hover:opacity-80 transition-opacity"> StudyFlow </button>
-      <div class="flex items-center gap-2">
-       <div :class="isOnline ? 'bg-green-500' : 'bg-red-500'" class="w-2 h-2 rounded-full animate-pulse"></div>
-       <span class="text-xs opacity-60 lg:hidden">{{ isOnline ? 'Online' : 'Offline' }}</span>
-      </div>
-     </header><div v-if="mobileMenuOpen" class="lg:hidden glass-strong border-b border-gray-700 p-4 animate-slideIn">
-      <nav class="space-y-2"><button @click="currentView = 'home'; mobileMenuOpen = false" :class="currentView === 'home' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-house text-xl"></i> Home </button> <button @click="currentView = 'timer'; mobileMenuOpen = false" :class="currentView === 'timer' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-timer text-xl"></i> Focus Timer </button> <button @click="currentView = 'tasks'; mobileMenuOpen = false" :class="currentView === 'tasks' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-check-square text-xl"></i> Daily Tasks </button> <button @click="currentView = 'analytics'; mobileMenuOpen = false" :class="currentView === 'analytics' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-chart-bar text-xl"></i> Analytics </button>
-       <div class="pt-2 border-t border-gray-700"><button @click="showThemeModal = true; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-palette text-xl"></i> Themes </button> <button @click="showNotificationSettings = true; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-bell text-xl"></i> Notifications </button> <button @click="showAdvancedTimer = true; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-timer text-xl"></i> Timer Settings </button> <button @click="showMusicModal = true; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-music-notes text-xl"></i> Music <span v-if="isPlaying" class="ml-auto"> <i class="ph-fill ph-speaker-high text-green-400 animate-pulse"></i> </span> </button>
-       <button @click="showDataModal = true; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-database text-xl"></i> Data Management </button>
-       </div><button @click="handleLogout" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-red-400"> <i class="ph-bold ph-sign-out text-xl"></i> Logout </button>
-      </nav>
-     </div><div class="flex-1 overflow-y-auto p-4 lg:p-8"><div v-if="currentView === 'home'" class="max-w-6xl mx-auto animate-fadeIn"><div class="text-center mb-12">
-        <div class="mb-6"><i class="ph-bold ph-brain text-7xl text-purple-400 animate-pulse"></i>
-        </div>
-        <h1 class="text-5xl md:text-6xl font-bold gradient-text mb-4">Welcome to StudyFlow</h1>
-        <p class="text-xl md:text-2xl opacity-80 mb-8">Your Ultimate Focus &amp; Productivity Companion</p>
-        <div class="flex flex-wrap justify-center gap-4"><button @click="currentView = 'timer'" class="btn-primary px-8 py-4 rounded-xl font-semibold text-lg flex items-center gap-2"> <i class="ph-bold ph-play text-xl"></i> Start Focusing </button> <button @click="currentView = 'analytics'" class="btn-secondary px-8 py-4 rounded-xl font-semibold text-lg flex items-center gap-2"> <i class="ph-bold ph-chart-bar text-xl"></i> View Stats </button>
-        </div>
-       </div><div class="mb-12">
-        <h2 class="text-3xl font-bold mb-8 text-center">Powerful Features</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"><div class="glass rounded-2xl p-6 card-hover">
-          <div class="w-14 h-14 rounded-xl bg-purple-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-timer text-3xl text-purple-400"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-2">Pomodoro Timer</h3>
-          <p class="opacity-70">Stay focused with customizable work sessions and breaks. Choose from preset durations or create your own custom timers.</p>
-         </div><div class="glass rounded-2xl p-6 card-hover">
-          <div class="w-14 h-14 rounded-xl bg-green-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-check-square text-3xl text-green-400"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-2">Task Management</h3>
-          <p class="opacity-70">Organize your daily tasks efficiently. Track completion and stay on top of your to-do list with ease.</p>
-         </div><div class="glass rounded-2xl p-6 card-hover">
-          <div class="w-14 h-14 rounded-xl bg-blue-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-chart-bar text-3xl text-blue-400"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-2">Study Analytics</h3>
-          <p class="opacity-70">Track your progress with detailed statistics. See how much time you've spent on each subject and monitor your productivity.</p>
-         </div><div class="glass rounded-2xl p-6 card-hover">
-          <div class="w-14 h-14 rounded-xl bg-pink-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-palette text-3xl text-pink-400"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-2">Beautiful Themes</h3>
-          <p class="opacity-70">Personalize your experience with 10 stunning themes. From dark mode to vibrant gradients, find your perfect aesthetic.</p>
-         </div><div class="glass rounded-2xl p-6 card-hover">
-          <div class="w-14 h-14 rounded-xl bg-yellow-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-music-notes text-3xl text-yellow-400"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-2">Focus Music</h3>
-          <p class="opacity-70">Create custom playlists to enhance your concentration. Add your favorite study music and control playback seamlessly.</p>
-         </div><div class="glass rounded-2xl p-6 card-hover">
-          <div class="w-14 h-14 rounded-xl bg-red-600/20 flex items-center justify-center mb-4"><i class="ph-bold ph-bell text-3xl text-red-400"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-2">Smart Alarms</h3>
-          <p class="opacity-70">Choose from multiple alarm sounds and enable 50-second warnings. Never miss the end of your focus session.</p>
+    </div>
+   </div>
+
+   <div class="flex justify-center gap-4 mb-6">
+    <button @click="toggleTimer" class="btn-primary px-6 sm:px-8 py-3 rounded-xl font-semibold flex items-center gap-2"> 
+     <i :class="timerRunning ? 'ph-bold ph-pause' : 'ph-bold ph-play'" class="text-xl"></i> {{ timerRunning ? 'Pause' : 'Start' }} 
+    </button> 
+    <button @click="resetTimer" class="btn-secondary px-6 sm:px-8 py-3 rounded-xl font-semibold flex items-center gap-2"> 
+     <i class="ph-bold ph-arrow-clockwise text-xl"></i> Reset 
+    </button>
+   </div>
+
+   <div class="grid md:grid-cols-2 gap-4">
+    <div>
+     <label class="block text-sm font-medium mb-2">Subject</label> 
+     <select v-model="currentSubject" class="w-full px-4 py-3 rounded-xl glass-strong max-w-full"> 
+      <option value="">Select Subject</option> 
+      <option v-for="subject in subjects" :key="subject._id || subject.id || subject" :value="subject.name || subject"> {{ subject.name || subject }} </option> 
+     </select>
+    </div>
+    <div>
+     <label class="block text-sm font-medium mb-2">Task (Optional)</label> 
+     <input v-model="currentTask" type="text" class="w-full px-4 py-3 rounded-xl glass-strong max-w-full" placeholder="What are you working on?">
+    </div>
+   </div>
+  </div>
+
+  <div class="glass rounded-2xl p-6 mb-6">
+   <h3 class="text-xl font-semibold mb-4 flex items-center gap-2"><i class="ph-bold ph-bell text-purple-400"></i> Alarm Settings</h3>
+   <div class="space-y-4">
+    <div>
+     <label class="block text-sm font-medium mb-2">Alarm Sound</label> 
+     <select v-model="alarmSound" @change="saveAlarmSettings" class="w-full px-4 py-3 rounded-xl glass-strong"> <option value="bell">🔔 Bell</option> <option value="chime">🎵 Chime</option> <option value="beep">📢 Beep</option> <option value="ding">🔊 Ding</option> <option value="gong">🎺 Gong</option> </select>
+    </div>
+    <div class="flex items-center justify-between glass-strong p-4 rounded-xl">
+     <div>
+      <div class="font-medium">50-Second Warning</div>
+      <div class="text-sm opacity-70">Play alarm before timer ends</div>
+     </div>
+     <button @click="toggleWarningAlarm" :class="warningAlarmEnabled ? 'bg-purple-600' : 'bg-gray-600'" class="relative w-14 h-8 rounded-full transition-colors flex-shrink-0">
+      <div :class="warningAlarmEnabled ? 'translate-x-6' : 'translate-x-1'" class="absolute top-1 w-6 h-6 bg-white rounded-full transition-transform"></div>
+     </button>
+    </div>
+    <button @click="testAlarm" class="w-full btn-secondary px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2"> <i class="ph-bold ph-speaker-high text-xl"></i> Test Alarm Sound </button>
+   </div>
+  </div>
+
+        <div class="glass rounded-2xl p-6 mb-6">
+         <h3 class="text-xl font-semibold mb-4 flex items-center gap-2"><i class="ph-bold ph-book text-purple-400"></i> Manage Subjects</h3>
+         <div class="flex gap-3 mb-6"><input v-model="newSubject" type="text" class="flex-1 px-4 py-3 rounded-xl glass-strong" placeholder="Add new subject (e.g., Mathematics, Physics, History)" @keyup.enter="addSubject"> <button @click="addSubject" class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2"> <i class="ph-bold ph-plus text-lg"></i> Add </button>
          </div>
-        </div>
-       </div><div class="mb-12">
-        <h2 class="text-3xl font-bold mb-8 text-center">How It Works</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-         <div class="text-center">
-          <div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-3xl font-bold mx-auto mb-4">
-           1
-          </div>
-          <h3 class="text-xl font-bold mb-2">Set Your Goal</h3>
-          <p class="opacity-70">Choose a subject and task you want to focus on. Select your preferred timer duration.</p>
+         <div v-if="subjects.length === 0" class="text-center opacity-70 py-8">
+          <i class="ph-bold ph-book-open text-5xl mb-3 text-purple-400"></i>
+          <p>No subjects added yet</p>
+          <p class="text-sm">Add subjects to organize your study sessions</p>
          </div>
-         <div class="text-center">
-          <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-3xl font-bold mx-auto mb-4">
-           2
-          </div>
-          <h3 class="text-xl font-bold mb-2">Stay Focused</h3>
-          <p class="opacity-70">Work without distractions during your focus session. The timer keeps you on track.</p>
-         </div>
-         <div class="text-center">
-          <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-3xl font-bold mx-auto mb-4">
-           3
-          </div>
-          <h3 class="text-xl font-bold mb-2">Track Progress</h3>
-          <p class="opacity-70">Review your analytics and celebrate your achievements. Watch your productivity grow!</p>
-         </div>
-        </div>
-       </div><div v-if="totalSessions > 0" class="mb-12">
-        <h2 class="text-3xl font-bold mb-8 text-center">Your Progress Today</h2>
-        <div class="grid md:grid-cols-4 gap-6">
-         <div class="glass rounded-2xl p-6 text-center card-hover"><i class="ph-bold ph-clock text-5xl text-purple-400 mb-3"></i>
-          <div class="text-4xl font-bold mb-2">
-           {{ totalFocusTime }}
-          </div>
-          <div class="opacity-70">
-           Minutes Focused
-          </div>
-         </div>
-         <div class="glass rounded-2xl p-6 text-center card-hover"><i class="ph-bold ph-fire text-5xl text-orange-400 mb-3"></i>
-          <div class="text-4xl font-bold mb-2">
-           {{ totalSessions }}
-          </div>
-          <div class="opacity-70">
-           Sessions Completed
-          </div>
-         </div>
-         <div class="glass rounded-2xl p-6 text-center card-hover"><i class="ph-bold ph-check-circle text-5xl text-green-400 mb-3"></i>
-          <div class="text-4xl font-bold mb-2">
-           {{ completedTasksCount }}
-          </div>
-          <div class="opacity-70">
-           Tasks Completed
-          </div>
-         </div>
-         <div class="glass rounded-2xl p-6 text-center card-hover"><i class="ph-bold ph-book text-5xl text-blue-400 mb-3"></i>
-          <div class="text-4xl font-bold mb-2">
-           {{ subjects.length }}
-          </div>
-          <div class="opacity-70">
-           Subjects Added
-          </div>
-         </div>
-        </div>
-       </div><div class="glass rounded-3xl p-8 md:p-12 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Boost Your Productivity?</h2>
-        <p class="text-lg opacity-80 mb-8">Join thousands of students and professionals who trust StudyFlow for their focus needs.</p><button @click="currentView = 'timer'" class="btn-primary px-10 py-4 rounded-xl font-semibold text-lg flex items-center gap-2 mx-auto"> <i class="ph-bold ph-rocket-launch text-xl"></i> Get Started Now </button>
-       </div>
-      </div><div v-if="currentView === 'timer'" class="max-w-4xl mx-auto animate-fadeIn">
-       <h2 class="text-3xl font-bold mb-6">Focus Timer</h2><div class="glass rounded-2xl p-6 mb-6 text-center"><i class="ph-bold ph-quotes text-3xl text-purple-400 mb-3"></i>
-        <p class="text-lg italic mb-2">"{{ currentQuote }}"</p><button @click="changeQuote" class="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1 mx-auto"> <i class="ph-bold ph-arrow-clockwise"></i> New Quote </button>
-       </div><div class="glass rounded-2xl p-6 mb-6">
-        <div class="flex flex-wrap gap-3 mb-6"><button @click="setTimerMode('focus')" :class="timerMode === 'focus' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-6 py-2 rounded-xl font-medium"> Focus (25m) </button> <button @click="setTimerMode('shortBreak')" :class="timerMode === 'shortBreak' ? 'bg-green-600 text-white' : 'btn-secondary'" class="px-6 py-2 rounded-xl font-medium"> Short Break (5m) </button> <button @click="setTimerMode('longBreak')" :class="timerMode === 'longBreak' ? 'bg-blue-600 text-white' : 'btn-secondary'" class="px-6 py-2 rounded-xl font-medium"> Long Break (15m) </button> <button @click="setTimerMode('custom')" :class="timerMode === 'custom' ? 'bg-orange-600 text-white' : 'btn-secondary'" class="px-6 py-2 rounded-xl font-medium"> Custom Time </button>
-        </div><div v-if="timerMode === 'custom'" class="mb-6 glass-strong p-4 rounded-xl"><label class="block text-sm font-medium mb-2">Set Custom Duration (minutes)</label>
-         <div class="flex gap-3"><input v-model.number="customMinutes" type="number" min="1" max="180" class="flex-1 px-4 py-3 rounded-xl glass" placeholder="Enter minutes (e.g., 60)"> <button @click="applyCustomTime" class="btn-primary px-6 py-3 rounded-xl font-semibold"> Apply </button>
-         </div>
-         <p class="text-xs opacity-70 mt-2">Enter any duration from 1 to 180 minutes</p>
-        </div><div class="flex justify-center mb-6">
-         <div class="relative">
-          <svg width="280" height="280" class="transform -rotate-90"><circle cx="140" cy="140" r="120" stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="none" /> <circle cx="140" cy="140" r="120" :stroke="timerColor" stroke-width="12" fill="none" :stroke-dasharray="753.98" :stroke-dashoffset="timerProgress" class="progress-ring-circle" :class="{ 'pulse-warning': timeRemaining <= 60 &amp;&amp; timerRunning }" />
-          </svg>
-          <div class="absolute inset-0 flex flex-col items-center justify-center">
-           <div class="text-5xl font-bold">
-            {{ formattedTime }}
-           </div>
-           <div class="text-sm opacity-70 mt-2">
-            {{ timerModeLabel }}
-           </div>
-          </div>
-         </div>
-        </div><div class="flex justify-center gap-4 mb-6"><button @click="toggleTimer" class="btn-primary px-8 py-3 rounded-xl font-semibold flex items-center gap-2"> <i :class="timerRunning ? 'ph-bold ph-pause' : 'ph-bold ph-play'" class="text-xl"></i> {{ timerRunning ? 'Pause' : 'Start' }} </button> <button @click="resetTimer" class="btn-secondary px-8 py-3 rounded-xl font-semibold flex items-center gap-2"> <i class="ph-bold ph-arrow-clockwise text-xl"></i> Reset </button>
-        </div><div class="grid md:grid-cols-2 gap-4">
-         <div><label class="block text-sm font-medium mb-2">Subject</label> <select v-model="currentSubject" class="w-full px-4 py-3 rounded-xl glass-strong"> <option value="">Select Subject</option> <option v-for="subject in subjects" :key="subject._id || subject.id || subject" :value="subject.name || subject"> {{ subject.name || subject }} </option> </select>
-         </div>
-         <div><label class="block text-sm font-medium mb-2">Task (Optional)</label> <input v-model="currentTask" type="text" class="w-full px-4 py-3 rounded-xl glass-strong" placeholder="What are you working on?">
-         </div>
-        </div>
-       </div><div class="glass rounded-2xl p-6 mb-6">
-        <h3 class="text-xl font-semibold mb-4 flex items-center gap-2"><i class="ph-bold ph-bell text-purple-400"></i> Alarm Settings</h3>
-        <div class="space-y-4">
-         <div><label class="block text-sm font-medium mb-2">Alarm Sound</label> <select v-model="alarmSound" @change="saveAlarmSettings" class="w-full px-4 py-3 rounded-xl glass-strong"> <option value="bell">🔔 Bell</option> <option value="chime">🎵 Chime</option> <option value="beep">📢 Beep</option> <option value="ding">🔊 Ding</option> <option value="gong">🎺 Gong</option> </select>
-         </div>
-         <div class="flex items-center justify-between glass-strong p-4 rounded-xl">
-          <div>
-           <div class="font-medium">
-            50-Second Warning
-           </div>
-           <div class="text-sm opacity-70">
-            Play alarm before timer ends
-           </div>
-          </div><button @click="toggleWarningAlarm" :class="warningAlarmEnabled ? 'bg-purple-600' : 'bg-gray-600'" class="relative w-14 h-8 rounded-full transition-colors">
-           <div :class="warningAlarmEnabled ? 'translate-x-6' : 'translate-x-1'" class="absolute top-1 w-6 h-6 bg-white rounded-full transition-transform"></div></button>
-         </div><button @click="testAlarm" class="w-full btn-secondary px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2"> <i class="ph-bold ph-speaker-high text-xl"></i> Test Alarm Sound </button>
-        </div>
-       </div><div class="glass rounded-2xl p-6 mb-6">
-        <h3 class="text-xl font-semibold mb-4 flex items-center gap-2"><i class="ph-bold ph-book text-purple-400"></i> Manage Subjects</h3>
-        <div class="flex gap-3 mb-6"><input v-model="newSubject" type="text" class="flex-1 px-4 py-3 rounded-xl glass-strong" placeholder="Add new subject (e.g., Mathematics, Physics, History)" @keyup.enter="addSubject"> <button @click="addSubject" class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2"> <i class="ph-bold ph-plus text-lg"></i> Add </button>
-        </div>
-        <div v-if="subjects.length === 0" class="text-center opacity-70 py-8">
-         <i class="ph-bold ph-book-open text-5xl mb-3 text-purple-400"></i>
-         <p>No subjects added yet</p>
-         <p class="text-sm">Add subjects to organize your study sessions</p>
-        </div>
-        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-         <div v-for="(subject, index) in subjects" :key="subject._id || subject.id || subject" class="glass-strong p-4 rounded-xl hover:scale-105 transition-all duration-200 group" :class="getSubjectCardClass(index)">
-          <div class="flex items-center justify-between mb-2">
-           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg" :class="getSubjectIconClass(index)">
-             {{ (subject.name || subject).charAt(0).toUpperCase() }}
+         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div v-for="(subject, index) in subjects" :key="subject._id || subject.id || subject" class="glass-strong p-4 rounded-xl hover:scale-105 transition-all duration-200 group" :class="getSubjectCardClass(index)">
+           <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-3">
+             <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg" :class="getSubjectIconClass(index)">
+              {{ (subject.name || subject).charAt(0).toUpperCase() }}
+             </div>
+             <div>
+              <div class="font-semibold text-white">{{ subject.name || subject }}</div>
+              <div class="text-xs opacity-70">{{ subjectStats[subject.name || subject] || 0 }} sessions</div>
+             </div>
             </div>
-            <div>
-             <div class="font-semibold text-white">{{ subject.name || subject }}</div>
-             <div class="text-xs opacity-70">{{ subjectStats[subject.name || subject] || 0 }} sessions</div>
-            </div>
+            <button @click="deleteSubject(subject.name || subject)" class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-opacity p-1 rounded-lg hover:bg-red-500/20">
+             <i class="ph-bold ph-trash text-lg"></i>
+            </button>
            </div>
-           <button @click="deleteSubject(subject.name || subject)" class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-opacity p-1 rounded-lg hover:bg-red-500/20">
-            <i class="ph-bold ph-trash text-lg"></i>
-           </button>
-          </div>
-          <div class="flex items-center gap-2 text-xs opacity-70">
-           <i class="ph-bold ph-calendar text-purple-400"></i>
-           <span>Created {{ formatDate(subject.createdAt || Date.now()) }}</span>
-          </div>
-         </div>
-        </div>
-       </div><div class="glass rounded-2xl p-6">
-        <h3 class="text-xl font-semibold mb-4">Today's Sessions</h3>
-        <div v-if="todaySessions.length === 0" class="text-center opacity-70 py-8"><i class="ph-bold ph-clock-countdown text-5xl mb-3"></i>
-         <p>No sessions completed yet today</p>
-        </div>
-        <div v-else class="space-y-3">
-         <div v-for="(session, index) in todaySessions" :key="index" class="glass-strong p-4 rounded-xl flex items-center justify-between">
-          <div>
-           <div class="font-semibold">
-            {{ session.subject || 'No Subject' }}
-           </div>
-           <div class="text-sm opacity-70">
-            {{ session.task || 'No task specified' }}
+           <div class="flex items-center gap-2 text-xs opacity-70">
+            <i class="ph-bold ph-calendar text-purple-400"></i>
+            <span>Created {{ formatDate(subject.createdAt || Date.now()) }}</span>
            </div>
           </div>
-          <div class="text-right">
-           <div class="font-semibold text-purple-400">
-            {{ session.duration }} min
-           </div>
-           <div class="text-xs opacity-70">
-            {{ session.time }}
-           </div>
-          </div>
-         </div>
-        </div>
-       </div>
-      </div><div v-if="currentView === 'tasks'" class="max-w-4xl mx-auto animate-fadeIn">
-       <h2 class="text-3xl font-bold mb-6">Daily Tasks</h2><div class="glass rounded-2xl p-6 mb-6">
-        <div class="flex gap-3"><input v-model="newTask" type="text" class="flex-1 px-4 py-3 rounded-xl glass-strong" placeholder="Add a new task..." @keyup.enter="addTask"> <button @click="addTask" class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2"> <i class="ph-bold ph-plus text-xl"></i> Add </button>
-        </div>
-       </div><div class="glass rounded-2xl p-6">
-        <div v-if="tasks.length === 0" class="text-center opacity-70 py-12"><i class="ph-bold ph-list-checks text-6xl mb-4"></i>
-         <p class="text-lg">No tasks yet. Add your first task!</p>
-        </div>
-        <div v-else class="space-y-3">
-         <div v-for="task in tasks" :key="task.id" class="glass-strong p-4 rounded-xl flex items-center gap-4 card-hover"><button @click="toggleTask(task.id)" class="flex-shrink-0"> <i :class="task.completed ? 'ph-fill ph-check-circle text-green-400' : 'ph-bold ph-circle'" class="text-2xl"></i> </button>
-          <div class="flex-1" :class="{ 'task-complete': task.completed }">
-           {{ task.text }}
-          </div><button @click="deleteTask(task.id)" class="text-red-400 hover:text-red-300 flex-shrink-0"> <i class="ph-bold ph-trash text-xl"></i> </button>
-         </div>
-        </div>
-        <div v-if="tasks.length > 0" class="mt-6 pt-6 border-t border-gray-700 flex justify-between items-center">
-         <div class="text-sm opacity-70">
-          {{ completedTasksCount }} of {{ tasks.length }} completed
-         </div><button @click="clearCompletedTasks" class="text-sm text-purple-400 hover:text-purple-300"> Clear Completed </button>
-        </div>
-       </div>
-      </div><div v-if="currentView === 'analytics'" class="max-w-6xl mx-auto animate-fadeIn">
-       <h2 class="text-3xl font-bold mb-6">Analytics &amp; Profile</h2><div class="glass rounded-2xl p-6 mb-6">
-        <div class="flex flex-wrap gap-3"><button @click="analyticsView = 'daily'" :class="analyticsView === 'daily' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-6 py-2 rounded-xl font-medium"> <i class="ph-bold ph-calendar"></i> Daily </button> <button @click="analyticsView = 'weekly'" :class="analyticsView === 'weekly' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-6 py-2 rounded-xl font-medium"> <i class="ph-bold ph-calendar-blank"></i> Weekly </button> <button @click="analyticsView = 'monthly'" :class="analyticsView === 'monthly' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-6 py-2 rounded-xl font-medium"> <i class="ph-bold ph-calendar-dots"></i> Monthly </button>
-        </div>
-       </div><div class="grid md:grid-cols-3 gap-6 mb-6">
-        <div class="glass rounded-2xl p-6 card-hover">
-         <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-xl bg-purple-600/20 flex items-center justify-center"><i class="ph-bold ph-clock text-2xl text-purple-400"></i>
-          </div>
-          <div>
-           <div class="text-3xl font-bold">
-            {{ currentPeriodStats.totalMinutes }}
-           </div>
-           <div class="text-sm opacity-70">
-            Total Minutes
-           </div>
-          </div>
-         </div>
-        </div>
-        <div class="glass rounded-2xl p-6 card-hover">
-         <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-xl bg-green-600/20 flex items-center justify-center"><i class="ph-bold ph-fire text-2xl text-green-400"></i>
-          </div>
-          <div>
-           <div class="text-3xl font-bold">
-            {{ currentPeriodStats.totalSessions }}
-           </div>
-           <div class="text-sm opacity-70">
-            Sessions
-           </div>
-          </div>
-         </div>
-        </div>
-        <div class="glass rounded-2xl p-6 card-hover">
-         <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-xl bg-blue-600/20 flex items-center justify-center"><i class="ph-bold ph-chart-line text-2xl text-blue-400"></i>
-          </div>
-          <div>
-           <div class="text-3xl font-bold">
-            {{ currentPeriodStats.avgSessionLength }}
-           </div>
-           <div class="text-sm opacity-70">
-            Avg Session (min)
-           </div>
-          </div>
-         </div>
-        </div>
-       </div><div class="grid md:grid-cols-2 gap-6 mb-6"><div class="glass rounded-2xl p-6">
-         <h3 class="text-xl font-semibold mb-4">Study Time Trend</h3>
-         <div class="chart-container h-64 sm:h-80">
-          <canvas ref="studyTimeChart"></canvas>
          </div>
         </div><div class="glass rounded-2xl p-6">
-         <h3 class="text-xl font-semibold mb-4">Subject Distribution</h3>
-         <div class="chart-container h-64 sm:h-80">
-          <canvas ref="subjectChart"></canvas>
+         <h3 class="text-xl font-semibold mb-4">Today's Sessions</h3>
+         <div v-if="todaySessions.length === 0" class="text-center opacity-70 py-8"><i class="ph-bold ph-clock-countdown text-5xl mb-3"></i>
+          <p>No sessions completed yet today</p>
          </div>
-        </div>
-       </div><div class="glass rounded-2xl p-6 mb-6">
-        <h3 class="text-xl font-semibold mb-4">Subject Progress</h3>
-        <div v-if="Object.keys(subjectStats).length === 0" class="text-center opacity-70 py-8"><i class="ph-bold ph-books text-5xl mb-3"></i>
-         <p>No study data yet. Start a focus session!</p>
-        </div>
-        
-        <div v-else class="space-y-3">
-         <div v-for="(stats, subject) in subjectStats" :key="subject" class="glass-strong p-4 rounded-2xl border border-white/5 hover:bg-white/5 transition-all group">
-          
-          <div class="flex justify-between items-center mb-3">
-           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-xl font-bold text-white shadow-lg border border-white/10" :class="getSubjectIconClass(subject.length)">
-             {{ subject.charAt(0).toUpperCase() }}
+         <div v-else class="space-y-3">
+          <div v-for="(session, index) in todaySessions" :key="index" class="glass-strong p-4 rounded-xl flex items-center justify-between">
+           <div>
+            <div class="font-semibold">
+             {{ session.subject || 'No Subject' }}
             </div>
-            <div>
-             <h4 class="font-bold text-white text-base">{{ subject }}</h4>
-             <div class="text-xs opacity-50">Active Subject</div>
+            <div class="text-sm opacity-70">
+             {{ session.task || 'No task specified' }}
             </div>
            </div>
-
-           <div class="flex gap-2">
-            <div class="flex flex-col items-center justify-center w-14 h-12 rounded-lg bg-purple-500/10 border border-purple-500/20">
-             <i class="ph-bold ph-clock text-purple-400 text-xs mb-0.5"></i>
-             <span class="text-xs font-bold text-white">{{ stats.time }}m</span>
+           <div class="text-right">
+            <div class="font-semibold text-purple-400">
+             {{ session.duration }} min
             </div>
-            <div class="flex flex-col items-center justify-center w-14 h-12 rounded-lg bg-blue-500/10 border border-blue-500/20">
-             <i class="ph-bold ph-check-circle text-blue-400 text-xs mb-0.5"></i>
-             <span class="text-xs font-bold text-white">{{ stats.sessions }}</span>
+            <div class="text-xs opacity-70">
+             {{ session.time }}
             </div>
            </div>
           </div>
-
-          <div class="w-full bg-gray-700/30 h-1.5 rounded-full overflow-hidden">
-           <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000" :style="{ width: (totalFocusTime > 0 ? (stats.time / totalFocusTime * 100) : 0) + '%' }"></div>
-          </div>
-          
-          <div class="text-right mt-1">
-           <span class="text-[10px] opacity-40">{{ Math.round((stats.time / totalFocusTime) * 100) || 0 }}% completed</span>
-          </div>
-
          </div>
         </div>
-
-       </div>
-       <div class="glass rounded-2xl p-6 mb-6">
-        <h3 class="text-xl font-semibold mb-4 flex items-center gap-2"><i class="ph-bold ph-trophy text-yellow-400"></i> Achievements</h3>
-        
-        <div v-if="achievements.length === 0" class="text-center opacity-70 py-8">
-         <i class="ph-bold ph-medal text-5xl mb-3 text-gray-500"></i>
-         <p>No achievements data found.</p>
-        </div>
-
-        <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-         <div v-for="achievement in achievements" :key="achievement._id" 
-              class="glass-strong p-4 rounded-xl flex items-center gap-4 transition-all border"
-              :class="achievement.unlocked ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-white/5 opacity-60 grayscale hover:opacity-100 hover:grayscale-0'">
-          
-          <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-lg"
-               :class="achievement.unlocked ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white shadow-orange-500/20' : 'bg-white/10 text-gray-400'">
-           <i :class="'ph-bold ph-' + (achievement.icon || 'star')"></i>
-          </div>
-          
-          <div class="flex-1">
-           <div class="flex justify-between items-start">
-             <h4 class="font-bold text-white" :class="{'text-yellow-100': achievement.unlocked}">{{ achievement.title }}</h4>
-             <i v-if="achievement.unlocked" class="ph-fill ph-check-circle text-green-400 text-lg"></i>
-             <i v-else class="ph-bold ph-lock text-gray-500 text-lg"></i>
-           </div>
-           
-           <p class="text-xs opacity-70 mt-0.5">{{ achievement.description }}</p>
-           
-           <div class="mt-2">
-             <span v-if="achievement.unlocked" class="text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded border border-yellow-500/20 font-mono tracking-wide">
-              UNLOCKED {{ formatDate(achievement.unlockedAt) }}
-             </span>
-             <span v-else class="text-[10px] bg-gray-700 text-gray-400 px-2 py-0.5 rounded font-mono tracking-wide">
-              LOCKED
-             </span>
-           </div>
-          </div>
-
+       </div><div v-if="currentView === 'tasks'" class="max-w-4xl mx-auto animate-fadeIn">
+        <h2 class="text-3xl font-bold mb-6">Daily Tasks</h2><div class="glass rounded-2xl p-6 mb-6">
+         <div class="flex gap-3"><input v-model="newTask" type="text" class="flex-1 px-4 py-3 rounded-xl glass-strong" placeholder="Add a new task..." @keyup.enter="addTask"> <button @click="addTask" class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2"> <i class="ph-bold ph-plus text-xl"></i> Add </button>
          </div>
-        </div>
-       </div>
-       <div class="glass rounded-2xl p-6 mb-6">
-        <h3 class="text-xl font-semibold mb-4">Profile</h3>
-        <div class="flex items-center gap-4 mb-6">
-         <div class="relative">
-          <div v-if="userProfileImage" class="w-20 h-20 rounded-full overflow-hidden"><img :src="userProfileImage" alt="Profile" class="w-full h-full object-cover" onerror="this.style.display='none'; this.alt='Image failed to load';">
-          </div>
-          <div v-else class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-3xl font-bold">
-           {{ userInitials }}
-          </div><button @click="$refs.profileImageInput.click()" class="absolute -bottom-1 -right-1 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-700"> <i class="ph-bold ph-camera text-sm"></i> </button> <input ref="profileImageInput" type="file" accept="image" class="hidden" @change="handleProfileImageUpload">
+        </div><div class="glass rounded-2xl p-6">
+         <div v-if="tasks.length === 0" class="text-center opacity-70 py-12"><i class="ph-bold ph-list-checks text-6xl mb-4"></i>
+          <p class="text-lg">No tasks yet. Add your first task!</p>
          </div>
-         <div>
-          <div class="text-2xl font-bold">
-           {{ userFullName }}
-          </div>
-          <div class="opacity-70">
-           {{ userEmail }}
-          </div>
-          <div class="text-sm text-purple-400">
-           @{{ currentUser }}
+         <div v-else class="space-y-3">
+          <div v-for="task in tasks" :key="task.id" class="glass-strong p-4 rounded-xl flex items-center gap-4 card-hover"><button @click="toggleTask(task.id)" class="flex-shrink-0"> <i :class="task.completed ? 'ph-fill ph-check-circle text-green-400' : 'ph-bold ph-circle'" class="text-2xl"></i> </button>
+           <div class="flex-1" :class="{ 'task-complete': task.completed }">
+            {{ task.text }}
+           </div><button @click="deleteTask(task.id)" class="text-red-400 hover:text-red-300 flex-shrink-0"> <i class="ph-bold ph-trash text-xl"></i> </button>
           </div>
          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4 text-center mb-6">
-         <div class="glass-strong p-4 rounded-xl">
-          <div class="text-2xl font-bold text-purple-400">
-           {{ subjects.length }}
-          </div>
+         <div v-if="tasks.length > 0" class="mt-6 pt-6 border-t border-gray-700 flex justify-between items-center">
           <div class="text-sm opacity-70">
-           Subjects
-          </div>
-         </div>
-         <div class="glass-strong p-4 rounded-xl">
-          <div class="text-2xl font-bold text-green-400">
-           {{ Math.floor(totalFocusTime / 60) }}h
-          </div>
-          <div class="text-sm opacity-70">
-           Study Hours
-          </div>
-         </div>
-        </div><button @click="showChangeCredentials = true" class="w-full btn-primary px-6 py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2"> <i class="ph-bold ph-user-gear text-xl"></i> Change Username &amp; Password </button>
-       </div><div class="glass rounded-2xl p-6">
-        <h3 class="text-xl font-semibold mb-4 text-red-400">Danger Zone</h3>
-        <p class="opacity-70 mb-4">Clear all your study data and start fresh.</p><button @click="clearAllData" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-xl font-semibold text-white"> Clear All Data </button>
-       </div>
-      </div>
-     </div><footer class="glass-strong border-t border-gray-700 p-6">
-      <div class="max-w-6xl mx-auto"><div class="grid md:grid-cols-4 gap-8 mb-8"><div>
-         <div class="flex items-center gap-2 mb-4"><i class="ph-bold ph-brain text-2xl text-purple-400"></i>
-          <h3 class="text-lg font-bold">StudyFlow</h3>
-         </div>
-         <p class="text-sm opacity-70 mb-4">Your ultimate focus and productivity companion. Built to help students and professionals achieve their goals.</p>
-         <div class="flex gap-3"><a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"> <i class="ph-bold ph-github-logo text-xl"></i> </a> <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"> <i class="ph-bold ph-twitter-logo text-xl"></i> </a> <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"> <i class="ph-bold ph-linkedin-logo text-xl"></i> </a>
-         </div>
-        </div><div>
-         <h3 class="text-lg font-bold mb-4">Features</h3>
-         <ul class="space-y-2 text-sm opacity-70">
-          <li class="flex items-center gap-2"><i class="ph-bold ph-check text-purple-400"></i> Pomodoro Timer</li>
-          <li class="flex items-center gap-2"><i class="ph-bold ph-check text-purple-400"></i> Task Management</li>
-          <li class="flex items-center gap-2"><i class="ph-bold ph-check text-purple-400"></i> Study Analytics</li>
-          <li class="flex items-center gap-2"><i class="ph-bold ph-check text-purple-400"></i> Custom Themes</li>
-          <li class="flex items-center gap-2"><i class="ph-bold ph-check text-purple-400"></i> Focus Music</li>
-         </ul>
-        </div><div>
-         <h3 class="text-lg font-bold mb-4">Quick Links</h3>
-         <ul class="space-y-2 text-sm">
-          <li><button @click="currentView = 'home'" class="opacity-70 hover:opacity-100 hover:text-purple-400"> Home </button></li>
-          <li><button @click="currentView = 'timer'" class="opacity-70 hover:opacity-100 hover:text-purple-400"> Focus Timer </button></li>
-          <li><button @click="currentView = 'tasks'" class="opacity-70 hover:opacity-100 hover:text-purple-400"> Tasks </button></li>
-          <li><button @click="currentView = 'analytics'" class="opacity-70 hover:opacity-100 hover:text-purple-400"> Analytics </button></li>
-          <li><button @click="showDeveloperModal = true" class="opacity-70 hover:opacity-100 hover:text-purple-400"> About Developer </button></li>
-         </ul>
-        </div><div>
-         <h3 class="text-lg font-bold mb-4">Get in Touch</h3>
-         <ul class="space-y-3 text-sm opacity-70">
-          <li class="flex items-center gap-2"><i class="ph-bold ph-envelope text-purple-400"></i> <a href="mailto:hello@studyflow.app" class="hover:text-purple-400">hello@studyflow.app</a></li>
-          <li class="flex items-center gap-2"><i class="ph-bold ph-globe text-purple-400"></i> <a href="https://studyflow.app" target="_blank" rel="noopener noreferrer" class="hover:text-purple-400">studyflow.app</a></li>
-          <li class="flex items-center gap-2"><i class="ph-bold ph-calendar text-purple-400"></i> {{ currentDateTime }}</li>
-         </ul>
-        </div>
-       </div><div class="pt-6 border-t border-gray-700">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-70">
-         <div class="flex items-center gap-2"><i class="ph-bold ph-copyright text-purple-400"></i> <span>{{ new Date().getFullYear() }} StudyFlow. All rights reserved.</span>
-         </div>
-         <div class="flex items-center gap-2"><i class="ph-bold ph-code text-purple-400"></i> <span>Crafted with</span> <i class="ph-fill ph-heart text-red-400"></i> <span>by</span> <button @click="showDeveloperModal = true" class="font-semibold text-purple-400 hover:text-purple-300">Salah Uddin Kader</button>
-         </div>
-         <div class="flex items-center gap-4"><span>Made with Vue.js &amp; Tailwind CSS</span>
+           {{ completedTasksCount }} of {{ tasks.length }} completed
+          </div><button @click="clearCompletedTasks" class="text-sm text-purple-400 hover:text-purple-300"> Clear Completed </button>
          </div>
         </div>
+       </div><div v-if="currentView === 'analytics'" class="max-w-6xl mx-auto animate-fadeIn">
+        <h2 class="text-3xl font-bold mb-6">Analytics &amp; Profile</h2><div class="glass rounded-2xl p-6 mb-6">
+         <div class="flex flex-wrap gap-3"><button @click="analyticsView = 'daily'" :class="analyticsView === 'daily' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-6 py-2 rounded-xl font-medium"> <i class="ph-bold ph-calendar"></i> Daily </button> <button @click="analyticsView = 'weekly'" :class="analyticsView === 'weekly' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-6 py-2 rounded-xl font-medium"> <i class="ph-bold ph-calendar-blank"></i> Weekly </button> <button @click="analyticsView = 'monthly'" :class="analyticsView === 'monthly' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-6 py-2 rounded-xl font-medium"> <i class="ph-bold ph-calendar-dots"></i> Monthly </button>
+         </div>
+        </div><div class="grid md:grid-cols-3 gap-6 mb-6">
+         <div class="glass rounded-2xl p-6 card-hover">
+          <div class="flex items-center gap-4">
+           <div class="w-12 h-12 rounded-xl bg-purple-600/20 flex items-center justify-center"><i class="ph-bold ph-clock text-2xl text-purple-400"></i>
+           </div>
+           <div>
+            <div class="text-3xl font-bold">
+             {{ currentPeriodStats.totalMinutes }}
+            </div>
+            <div class="text-sm opacity-70">
+             Total Minutes
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="glass rounded-2xl p-6 card-hover">
+          <div class="flex items-center gap-4">
+           <div class="w-12 h-12 rounded-xl bg-green-600/20 flex items-center justify-center"><i class="ph-bold ph-fire text-2xl text-green-400"></i>
+           </div>
+           <div>
+            <div class="text-3xl font-bold">
+             {{ currentPeriodStats.totalSessions }}
+            </div>
+            <div class="text-sm opacity-70">
+             Sessions
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="glass rounded-2xl p-6 card-hover">
+          <div class="flex items-center gap-4">
+           <div class="w-12 h-12 rounded-xl bg-blue-600/20 flex items-center justify-center"><i class="ph-bold ph-chart-line text-2xl text-blue-400"></i>
+           </div>
+           <div>
+            <div class="text-3xl font-bold">
+             {{ currentPeriodStats.avgSessionLength }}
+            </div>
+            <div class="text-sm opacity-70">
+             Avg Session (min)
+            </div>
+           </div>
+          </div>
+         </div>
+        </div><div class="grid md:grid-cols-2 gap-6 mb-6"><div class="glass rounded-2xl p-6">
+           <h3 class="text-xl font-semibold mb-4">Study Time Trend</h3>
+           <div class="chart-container h-64 sm:h-80">
+            <canvas ref="studyTimeChart"></canvas>
+           </div>
+          </div><div class="glass rounded-2xl p-6">
+           <h3 class="text-xl font-semibold mb-4">Subject Distribution</h3>
+           <div class="chart-container h-64 sm:h-80">
+            <canvas ref="subjectChart"></canvas>
+           </div>
+          </div>
+         </div><div class="glass rounded-2xl p-6 mb-6">
+          <h3 class="text-xl font-semibold mb-4">Subject Progress</h3>
+          <div v-if="Object.keys(subjectStats).length === 0" class="text-center opacity-70 py-8"><i class="ph-bold ph-books text-5xl mb-3"></i>
+           <p>No study data yet. Start a focus session!</p>
+          </div>
+          
+          <div v-else class="space-y-3">
+           <div v-for="(stats, subject) in subjectStats" :key="subject" class="glass-strong p-4 rounded-2xl border border-white/5 hover:bg-white/5 transition-all group">
+            
+            <div class="flex justify-between items-center mb-3">
+             <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-xl font-bold text-white shadow-lg border border-white/10" :class="getSubjectIconClass(subject.length)">
+               {{ subject.charAt(0).toUpperCase() }}
+              </div>
+              <div>
+               <h4 class="font-bold text-white text-base">{{ subject }}</h4>
+               <div class="text-xs opacity-50">Active Subject</div>
+              </div>
+             </div>
+
+             <div class="flex gap-2">
+              <div class="flex flex-col items-center justify-center w-14 h-12 rounded-lg bg-purple-500/10 border border-purple-500/20">
+               <i class="ph-bold ph-clock text-purple-400 text-xs mb-0.5"></i>
+               <span class="text-xs font-bold text-white">{{ stats.time }}m</span>
+              </div>
+              <div class="flex flex-col items-center justify-center w-14 h-12 rounded-lg bg-blue-500/10 border border-blue-500/20">
+               <i class="ph-bold ph-check-circle text-blue-400 text-xs mb-0.5"></i>
+               <span class="text-xs font-bold text-white">{{ stats.sessions }}</span>
+              </div>
+             </div>
+            </div>
+
+            <div class="w-full bg-gray-700/30 h-1.5 rounded-full overflow-hidden">
+             <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000" :style="{ width: (totalFocusTime > 0 ? (stats.time / totalFocusTime * 100) : 0) + '%' }"></div>
+            </div>
+            
+            <div class="text-right mt-1">
+             <span class="text-[10px] opacity-40">{{ Math.round((stats.time / totalFocusTime) * 100) || 0 }}% completed</span>
+            </div>
+
+           </div>
+          </div>
+
+         </div>
+         <div class="glass rounded-2xl p-6 mb-6">
+          <h3 class="text-xl font-semibold mb-4 flex items-center gap-2"><i class="ph-bold ph-trophy text-yellow-400"></i> Achievements</h3>
+          
+          <div v-if="achievements.length === 0" class="text-center opacity-70 py-8">
+           <i class="ph-bold ph-medal text-5xl mb-3 text-gray-500"></i>
+           <p>No achievements data found.</p>
+          </div>
+
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+           <div v-for="achievement in achievements" :key="achievement._id" 
+                class="glass-strong p-4 rounded-xl flex items-center gap-4 transition-all border"
+                :class="achievement.unlocked ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-white/5 opacity-60 grayscale hover:opacity-100 hover:grayscale-0'">
+            
+            <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-lg"
+                 :class="achievement.unlocked ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white shadow-orange-500/20' : 'bg-white/10 text-gray-400'">
+             <i :class="'ph-bold ph-' + (achievement.icon || 'star')"></i>
+            </div>
+            
+            <div class="flex-1">
+             <div class="flex justify-between items-start">
+               <h4 class="font-bold text-white" :class="{'text-yellow-100': achievement.unlocked}">{{ achievement.title }}</h4>
+               <i v-if="achievement.unlocked" class="ph-fill ph-check-circle text-green-400 text-lg"></i>
+               <i v-else class="ph-bold ph-lock text-gray-500 text-lg"></i>
+             </div>
+             
+             <p class="text-xs opacity-70 mt-0.5">{{ achievement.description }}</p>
+             
+             <div class="mt-2">
+               <span v-if="achievement.unlocked" class="text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded border border-yellow-500/20 font-mono tracking-wide">
+                UNLOCKED {{ formatDate(achievement.unlockedAt) }}
+               </span>
+               <span v-else class="text-[10px] bg-gray-700 text-gray-400 px-2 py-0.5 rounded font-mono tracking-wide">
+                LOCKED
+               </span>
+             </div>
+            </div>
+
+           </div>
+          </div>
+         </div>
+         <div class="glass rounded-2xl p-6 mb-6">
+          <h3 class="text-xl font-semibold mb-4">Profile</h3>
+          <div class="flex items-center gap-4 mb-6">
+           <div class="relative">
+            <div v-if="userProfileImage" class="w-20 h-20 rounded-full overflow-hidden"><img :src="userProfileImage" alt="Profile" class="w-full h-full object-cover" onerror="this.style.display='none'; this.alt='Image failed to load';">
+            </div>
+            <div v-else class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-3xl font-bold">
+             {{ userInitials }}
+            </div><button @click="$refs.profileImageInput.click()" class="absolute -bottom-1 -right-1 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-700"> <i class="ph-bold ph-camera text-sm"></i> </button> <input ref="profileImageInput" type="file" accept="image" class="hidden" @change="handleProfileImageUpload">
+           </div>
+           <div>
+            <div class="text-2xl font-bold">
+             {{ userFullName }}
+            </div>
+            <div class="opacity-70">
+             {{ userEmail }}
+            </div>
+            <div class="text-sm text-purple-400">
+             @{{ currentUser }}
+            </div>
+           </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4 text-center mb-6">
+           <div class="glass-strong p-4 rounded-xl">
+            <div class="text-2xl font-bold text-purple-400">
+             {{ subjects.length }}
+            </div>
+            <div class="text-sm opacity-70">
+             Subjects
+            </div>
+           </div>
+           <div class="glass-strong p-4 rounded-xl">
+            <div class="text-2xl font-bold text-green-400">
+             {{ Math.floor(totalFocusTime / 60) }}h
+            </div>
+            <div class="text-sm opacity-70">
+             Study Hours
+            </div>
+           </div>
+          </div><button @click="showChangeCredentials = true" class="w-full btn-primary px-6 py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2"> <i class="ph-bold ph-user-gear text-xl"></i> Change Username &amp; Password </button>
+         </div><div class="glass rounded-2xl p-6">
+          <h3 class="text-xl font-semibold mb-4 text-red-400">Danger Zone</h3>
+          <p class="opacity-70 mb-4">Clear all your study data and start fresh.</p><button @click="clearAllData" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-xl font-semibold text-white"> Clear All Data </button>
+         </div>
+        </div>
+       </div><footer class="glass-strong border-t border-gray-700 p-6">
+       <div class="max-w-6xl mx-auto"><div class="grid md:grid-cols-4 gap-8 mb-8"><div>
+          <div class="flex items-center gap-2 mb-4"><i class="ph-bold ph-brain text-2xl text-purple-400"></i>
+           <h3 class="text-lg font-bold">StudyFlow</h3>
+          </div>
+          <p class="text-sm opacity-70 mb-4">Your ultimate focus and productivity companion. Built to help students and professionals achieve their goals.</p>
+          <div class="flex gap-3"><a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"> <i class="ph-bold ph-github-logo text-xl"></i> </a> <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"> <i class="ph-bold ph-twitter-logo text-xl"></i> </a> <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"> <i class="ph-bold ph-linkedin-logo text-xl"></i> </a>
+          </div>
+         </div><div>
+          <h3 class="text-lg font-bold mb-4">Features</h3>
+          <ul class="space-y-2 text-sm opacity-70">
+           <li class="flex items-center gap-2"><i class="ph-bold ph-check text-purple-400"></i> Pomodoro Timer</li>
+           <li class="flex items-center gap-2"><i class="ph-bold ph-check text-purple-400"></i> Task Management</li>
+           <li class="flex items-center gap-2"><i class="ph-bold ph-check text-purple-400"></i> Study Analytics</li>
+           <li class="flex items-center gap-2"><i class="ph-bold ph-check text-purple-400"></i> Custom Themes</li>
+           <li class="flex items-center gap-2"><i class="ph-bold ph-check text-purple-400"></i> Focus Music</li>
+          </ul>
+         </div><div>
+          <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-sm">
+           <li><button @click="currentView = 'home'" class="opacity-70 hover:opacity-100 hover:text-purple-400"> Home </button></li>
+           <li><button @click="currentView = 'timer'" class="opacity-70 hover:opacity-100 hover:text-purple-400"> Focus Timer </button></li>
+           <li><button @click="currentView = 'tasks'" class="opacity-70 hover:opacity-100 hover:text-purple-400"> Tasks </button></li>
+           <li><button @click="currentView = 'analytics'" class="opacity-70 hover:opacity-100 hover:text-purple-400"> Analytics </button></li>
+           <li><button @click="showDeveloperModal = true" class="opacity-70 hover:opacity-100 hover:text-purple-400"> About Developer </button></li>
+          </ul>
+         </div><div>
+          <h3 class="text-lg font-bold mb-4">Get in Touch</h3>
+          <ul class="space-y-3 text-sm opacity-70">
+           <li class="flex items-center gap-2"><i class="ph-bold ph-envelope text-purple-400"></i> <a href="mailto:hello@studyflow.app" class="hover:text-purple-400">hello@studyflow.app</a></li>
+           <li class="flex items-center gap-2"><i class="ph-bold ph-globe text-purple-400"></i> <a href="https://studyflow.app" target="_blank" rel="noopener noreferrer" class="hover:text-purple-400">studyflow.app</a></li>
+           <li class="flex items-center gap-2"><i class="ph-bold ph-calendar text-purple-400"></i> {{ currentDateTime }}</li>
+          </ul>
+         </div>
+        </div><div class="pt-6 border-t border-gray-700">
+         <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-70">
+          <div class="flex items-center gap-2"><i class="ph-bold ph-copyright text-purple-400"></i> <span>{{ new Date().getFullYear() }} StudyFlow. All rights reserved.</span>
+          </div>
+          <div class="flex items-center gap-2"><i class="ph-bold ph-code text-purple-400"></i> <span>Crafted with</span> <i class="ph-fill ph-heart text-red-400"></i> <span>by</span> <button @click="showDeveloperModal = true" class="font-semibold text-purple-400 hover:text-purple-300">Salah Uddin Kader</button>
+          </div>
+          <div class="flex items-center gap-4"><span>Made with Vue.js &amp; Tailwind CSS</span>
+          </div>
+         </div>
+        </div>
        </div>
-      </div>
-     </footer>
+      </footer>
     </main>
    </div>
   </div>
