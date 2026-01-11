@@ -27,7 +27,7 @@
   <meta property="twitter:description" content="Boost your productivity with StudyFlow - a beautiful focus timer app featuring Pomodoro technique, task management, and study analytics.">
   <meta property="twitter:image" content="https://studyflow-web.netlify.app/Assets/brain-duotone.png">
   <meta property="twitter:creator" content="@studyflowapp"><meta name="theme-color" content="#8b5cf6">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="StudyFlow">
   <meta name="application-name" content="StudyFlow">
@@ -40,7 +40,11 @@
   <link rel="icon" type="image/svg+xml" href="Assets/brain-duotone.png">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="Assets/style.css">
-  <script src="https://cdn.tailwindcss.com"></script><script src="https://unpkg.com/vue@3/dist/vue.global.js"></script><script src="https://unpkg.com/@phosphor-icons/web"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {} }, corePlugins: { preflight: true } };
+  </script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script><script src="https://unpkg.com/@phosphor-icons/web"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="https://www.youtube.com/iframe_api"></script>
@@ -51,39 +55,39 @@
  </head>
  <body class="theme-dark">
   <div id="app" v-cloak><div :class="{ 'hidden': isTouchDevice }" class="custom-cursor" ref="cursor"></div>
-   <div :class="{ 'hidden': isTouchDevice }" class="custom-cursor-dot" ref="cursorDot"></div><div class="particle-container" ref="particleContainer"></div><audio ref="audioPlayer" @ended="onTrackEnded" @error="handleAudioError" crossorigin="anonymous"></audio><div v-if="showYouTubePlayer && youtubeVideoId" class="fixed bottom-4 right-4 z-40 glass rounded-2xl p-4 shadow-2xl max-w-sm">
-    <div class="flex items-center justify-between mb-3">
+   <div :class="{ 'hidden': isTouchDevice }" class="custom-cursor-dot" ref="cursorDot"></div><div class="particle-container" ref="particleContainer"></div><audio ref="audioPlayer" @ended="onTrackEnded" @error="handleAudioError" crossorigin="anonymous"></audio><div v-if="showYouTubePlayer && youtubeVideoId" class="fixed bottom-20 sm:bottom-4 right-4 z-40 glass rounded-2xl p-3 sm:p-4 shadow-2xl w-[calc(100vw-2rem)] sm:w-auto max-w-sm">
+    <div class="flex items-center justify-between mb-2 sm:mb-3">
      <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center"><i class="ph-bold ph-youtube-logo text-sm text-white"></i></div>
+      <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-red-600 flex items-center justify-center"><i class="ph-bold ph-youtube-logo text-xs sm:text-sm text-white"></i></div>
       <div>
-       <div class="font-semibold text-sm">YouTube Music</div>
-       <div class="text-xs opacity-70">Playing from YouTube</div>
+       <div class="font-semibold text-xs sm:text-sm">YouTube Music</div>
+       <div class="text-[10px] sm:text-xs opacity-70">Playing from YouTube</div>
       </div>
      </div>
-     <button @click="stopYouTubeVideo" class="text-red-400 hover:text-red-300"><i class="ph-bold ph-x text-lg"></i></button>
+     <button @click="stopYouTubeVideo" class="text-red-400 hover:text-red-300"><i class="ph-bold ph-x text-base sm:text-lg"></i></button>
     </div>
-    <div class="aspect-video rounded-lg overflow-hidden mb-3">
+    <div class="aspect-video rounded-lg overflow-hidden mb-2 sm:mb-3">
      <div id="youtube-player" class="w-full h-full"></div>
     </div>
-    <div class="flex items-center justify-center gap-2">
-     <button @click="toggleYouTubeMute" class="btn-secondary p-1.5 rounded-full hover:bg-purple-600 transition-colors">
-      <i :class="youtubeMuted ? 'ph-bold ph-speaker-x' : 'ph-bold ph-speaker-high'" class="text-sm"></i>
+    <div class="flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
+     <button @click="toggleYouTubeMute" class="btn-secondary p-1 sm:p-1.5 rounded-full hover:bg-purple-600 transition-colors">
+      <i :class="youtubeMuted ? 'ph-bold ph-speaker-x' : 'ph-bold ph-speaker-high'" class="text-xs sm:text-sm"></i>
      </button>
      <div class="flex items-center gap-1">
-      <i class="ph-bold ph-speaker-low text-purple-400 text-xs"></i>
-      <input type="range" min="0" max="100" v-model="youtubeVolume" @input="setYouTubeVolume" class="w-12 accent-purple-500">
-      <i class="ph-bold ph-speaker-high text-purple-400 text-xs"></i>
+      <i class="ph-bold ph-speaker-low text-purple-400 text-[10px] sm:text-xs"></i>
+      <input type="range" min="0" max="100" v-model="youtubeVolume" @input="setYouTubeVolume" class="w-10 sm:w-12 accent-purple-500">
+      <i class="ph-bold ph-speaker-high text-purple-400 text-[10px] sm:text-xs"></i>
      </div>
      <div class="flex items-center gap-1">
-      <span class="text-xs text-purple-400">Speed</span>
-      <input type="range" min="0.25" max="2" step="0.25" v-model="youtubeSpeed" @input="setYouTubeSpeed" class="w-10 accent-purple-500">
-      <span class="text-xs text-purple-400">{{ youtubeSpeed }}x</span>
+      <span class="text-[10px] sm:text-xs text-purple-400">Speed</span>
+      <input type="range" min="0.25" max="2" step="0.25" v-model="youtubeSpeed" @input="setYouTubeSpeed" class="w-8 sm:w-10 accent-purple-500">
+      <span class="text-[10px] sm:text-xs text-purple-400">{{ youtubeSpeed }}x</span>
      </div>
-     <button @click="playYouTubeManually" class="btn-primary p-1.5 rounded-full hover:bg-pink-600 transition-colors">
-      <i :class="isPlaying ? 'ph-bold ph-pause' : 'ph-bold ph-play'" class="text-sm"></i>
+     <button @click="playYouTubeManually" class="btn-primary p-1 sm:p-1.5 rounded-full hover:bg-pink-600 transition-colors">
+      <i :class="isPlaying ? 'ph-bold ph-pause' : 'ph-bold ph-play'" class="text-xs sm:text-sm"></i>
      </button>
-     <button @click="openInYouTube" class="btn-secondary p-1.5 rounded-full hover:bg-red-600 transition-colors">
-      <i class="ph-bold ph-youtube-logo text-sm"></i>
+     <button @click="openInYouTube" class="btn-secondary p-1 sm:p-1.5 rounded-full hover:bg-red-600 transition-colors">
+      <i class="ph-bold ph-youtube-logo text-xs sm:text-sm"></i>
      </button>
     </div>
    </div><div v-if="showLoginSuccess" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 modal-backdrop">
@@ -1029,9 +1033,9 @@
     </div>
    </div>
 
-   <div class="flex justify-center mb-6 relative w-full h-[280px] sm:h-[320px]">
-    <div class="relative w-full h-full max-w-[280px] sm:max-w-[320px]">
-     <svg viewBox="0 0 280 280" class="w-full h-full transform -rotate-90">
+   <div class="flex justify-center items-center mb-6 relative w-full h-[280px] sm:h-[320px]">
+    <div class="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] flex items-center justify-center">
+     <svg viewBox="0 0 280 280" class="w-full h-full transform -rotate-90" preserveAspectRatio="xMidYMid meet">
       <circle cx="140" cy="140" r="120" stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="none" /> 
       <circle cx="140" cy="140" r="120" :stroke="timerColor" stroke-width="12" fill="none" :stroke-dasharray="753.98" :stroke-dashoffset="timerProgress" class="progress-ring-circle" :class="{ 'pulse-warning': timeRemaining <= 60 && timerRunning }" />
      </svg>
@@ -1424,19 +1428,19 @@
        </div>
 
        <!-- AI Floating Button and Popup -->
-       <div v-if="isAuthenticated && !showLoader" class="fixed bottom-6 right-6 z-50">
+       <div v-if="isAuthenticated && !showLoader" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
         <!-- Floating Trigger Button -->
         <button 
             @click="showAIChat = !showAIChat"
-            class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-500/30 flex items-center justify-center hover:scale-110 transition-transform duration-300 group"
+            class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-500/30 flex items-center justify-center hover:scale-110 transition-transform duration-300 group"
         >
-            <i :class="showAIChat ? 'ph-bold ph-x' : 'ph-bold ph-robot'" class="text-3xl text-white group-hover:rotate-12 transition-transform"></i>
+            <i :class="showAIChat ? 'ph-bold ph-x' : 'ph-bold ph-robot'" class="text-2xl sm:text-3xl text-white group-hover:rotate-12 transition-transform"></i>
             <!-- Notification Dot -->
-            <span class="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full animate-pulse border-2 border-gray-900" v-if="!showAIChat"></span>
+            <span class="absolute top-0 right-0 w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full animate-pulse border-2 border-gray-900" v-if="!showAIChat"></span>
         </button>
 
         <!-- AI Chat Popup Modal -->
-        <div v-if="showAIChat" class="absolute bottom-20 right-0 w-[400px] h-[600px] glass-strong rounded-2xl flex flex-col overflow-hidden shadow-2xl animate-slideUp border border-purple-500/30">
+        <div v-if="showAIChat" class="absolute bottom-16 sm:bottom-20 right-0 w-[calc(100vw-2rem)] sm:w-[400px] h-[500px] sm:h-[600px] glass-strong rounded-2xl flex flex-col overflow-hidden shadow-2xl animate-slideUp border border-purple-500/30">
             <!-- Header -->
             <div class="p-4 bg-gradient-to-r from-purple-900/80 to-indigo-900/80 border-b border-white/10 flex justify-between items-center backdrop-blur-md">
                 <div class="flex items-center gap-3">
@@ -1623,7 +1627,7 @@
           <div class="flex items-center gap-2 mb-4"><i class="ph-bold ph-brain text-2xl text-purple-400"></i>
            <h3 class="text-lg font-bold">StudyFlow</h3>
           </div>
-          <p class="text-sm opacity-70 mb-4">Your ultimate focus and productivity companion. Built to help students and professionals achieve their goals.</p>
+          <p class="text-sm opacity-70 mb-4">Your ultimate focus and productivity companion. Build to help students and professionals achieve their goals.</p>
           <div class="flex gap-3"><a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"> <i class="ph-bold ph-github-logo text-xl"></i> </a> <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"> <i class="ph-bold ph-twitter-logo text-xl"></i> </a> <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"> <i class="ph-bold ph-linkedin-logo text-xl"></i> </a>
           </div>
          </div><div>

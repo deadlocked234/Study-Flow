@@ -325,8 +325,13 @@ body.theme-light .text-gray-500 {
 /* Progress ring animation */
 .progress-ring-circle {
     transition: stroke-dashoffset 0.5s ease;
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
+    transform-origin: center;
+}
+
+/* Ensure SVG is perfectly centered */
+svg {
+    display: block;
+    margin: 0 auto;
 }
 
 /* Task completion animation */
@@ -616,4 +621,134 @@ button {
 
 button:active {
     transform: scale(0.95);
+}
+
+/* Animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slideUp {
+    animation: slideUp 0.3s ease-out;
+}
+
+/* Mobile Responsive Improvements */
+@media (max-width: 640px) {
+    /* Reduce padding on mobile for better space utilization */
+    .glass, .glass-strong {
+        padding: 1rem !important;
+    }
+    
+    /* Make modals full height on mobile */
+    .modal-backdrop > div {
+        max-height: 95vh;
+        width: 95%;
+    }
+    
+    /* Adjust font sizes for mobile readability */
+    h1 {
+        font-size: 1.75rem !important;
+    }
+    
+    h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    h3 {
+        font-size: 1.25rem !important;
+    }
+    
+    /* Fix text wrapping issues */
+    p, li, span {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Better chart sizing on mobile */
+    .chart-container {
+        height: 250px;
+    }
+    
+    /* Adjust floating button to not obstruct content */
+    .fixed.bottom-4 {
+        bottom: 1rem;
+    }
+    
+    .fixed.right-4 {
+        right: 1rem;
+    }
+    
+    /* Better input sizing on mobile */
+    input, select, textarea {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    /* Make cards stack better on mobile */
+    .grid {
+        gap: 0.75rem !important;
+    }
+    
+    /* Ensure footer text doesn't overflow */
+    footer {
+        padding: 1rem !important;
+    }
+    
+    footer .text-sm {
+        font-size: 0.8rem;
+    }
+    
+    /* Fix About Developer section scrolling */
+    .overflow-y-auto {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure modals don't get covered by floating buttons */
+    .z-50 {
+        z-index: 50;
+    }
+    
+    /* Better spacing for mobile menu items */
+    .space-y-2 > * + * {
+        margin-top: 0.5rem;
+    }
+    
+    /* Improve button tap targets */
+    button, a {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small devices adjustments */
+    .glass, .glass-strong {
+        padding: 0.75rem !important;
+    }
+    
+    /* Make floating button smaller on very small screens */
+    .fixed.bottom-4.right-4 button {
+        width: 3rem !important;
+        height: 3rem !important;
+    }
+    
+    /* Reduce margins for better space usage */
+    .p-6 {
+        padding: 1rem !important;
+    }
+    
+    .p-8 {
+        padding: 1.25rem !important;
+    }
+    
+    /* Smaller font for very small screens */
+    body {
+        font-size: 14px;
+    }
 }

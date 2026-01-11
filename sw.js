@@ -1,22 +1,13 @@
-const CACHE_NAME = 'studyflow-v2'; // ভার্সন পরিবর্তন করা হয়েছে
+const CACHE_NAME = 'studyflow-v3';
 
-// অ্যাপের নিজস্ব এবং বাইরের লাইব্রেরি (CDN) সব ক্যাশ করা হবে
+// Only cache local assets, skip CDN URLs to avoid CORS issues
 const urlsToCache = [
   '/',
   '/index.html',
   '/Assets/style.css',
   '/Assets/script.js',
   '/manifest.json',
-  '/Assets/brain-duotone.png', // আইকনটিও যোগ করা হলো
-  
-  // --- External Libraries (CDNs) ---
-  // এগুলো ক্যাশ করলে লোডিং সুপারফাস্ট হবে
-  'https://cdn.tailwindcss.com',
-  'https://unpkg.com/vue@3/dist/vue.global.js',
-  'https://unpkg.com/@phosphor-icons/web',
-  'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-  'https://cdn.socket.io/4.7.2/socket.io.min.js'
+  '/Assets/brain-duotone.png'
 ];
 
 // Install Service Worker
@@ -24,42 +15,71 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Opened cache');
+        console.log('✅ Service Worker: Cache opened');
         return cache.addAll(urlsToCache);
       })
+      .catch((error) => {
+        console.error('❌ Service Worker: Cache install failed', error);
+      })
   );
-  self.skipWaiting(); // নতুন সার্ভিস ওয়ার্কার দ্রুত একটিভ হবে
+  self.skipWaiting();
 });
 
-// Fetch Assets (Cache First Strategy)
+// Fetch Event - Network First for API, Cache First for Assets
 self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Skip non-GET requests
+  if (request.method !== 'GET') return;
+
+  // API calls - Network First
+  if (url.hostname === 'localhost' || url.hostname === '127.0.0.1' || url.pathname.includes('/api')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (!response) return response;
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => {
+          return caches.match(request);
+        })
+    );
+    return;
+  }
+
+  // Static Assets - Cache First
   event.respondWith(
-    caches.match(event.request)
+    caches.match(request)
       .then((response) => {
-        // ১. যদি ক্যাশে থাকে, সেখান থেকেই লোড করবে (সুপারফাস্ট)
         if (response) {
           return response;
         }
-        
-        // ২. না থাকলে নেটওয়ার্ক থেকে আনবে এবং ক্যাশে সেভ করে রাখবে (Runtime Caching)
-        return fetch(event.request).then(
-          (newResponse) => {
-            // রেসপন্স ভ্যালিড কিনা চেক করা
-            if(!newResponse || newResponse.status !== 200 || newResponse.type !== 'basic') {
-              return newResponse;
-            }
 
-            // রেসপন্স ক্লোন করে ক্যাশে রাখা
-            const responseToCache = newResponse.clone();
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return newResponse;
+        return fetch(request).then((response) => {
+          if (!response || response.status !== 200 || response.type === 'error') {
+            return response;
           }
-        ).catch(() => {
-            // অফলাইনে থাকলে এবং পেজ লোড না হলে কিছু করার নেই (অথবা একটি অফলাইন পেজ দেখানো যেতে পারে)
+
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, responseClone);
+          });
+
+          return response;
+        });
+      })
+      .catch(() => {
+        return new Response('Offline - No cached version available', {
+          status: 503,
+          statusText: 'Service Unavailable',
+          headers: new Headers({
+            'Content-Type': 'text/plain'
+          })
         });
       })
   );
@@ -73,6 +93,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('🗑️  Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
