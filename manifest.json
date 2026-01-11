@@ -2,12 +2,12 @@
   "name": "StudyFlow - Focus & Productivity Timer",
   "short_name": "StudyFlow",
   "description": "Boost your productivity with StudyFlow - a beautiful focus timer app featuring Pomodoro technique, task management, study analytics, and ambient music.",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#1a1a2e",
   "theme_color": "#8b5cf6",
   "orientation": "portrait-primary",
-  "scope": "/",
+  "scope": "./",
   "categories": ["productivity", "education", "utilities"],
   "lang": "en-US",
   "dir": "ltr",
@@ -39,7 +39,7 @@
       "name": "Start Timer",
       "short_name": "Timer",
       "description": "Start focus timer",
-      "url": "/?action=start-timer",
+      "url": "./?action=start-timer",
       "icons": [
         {
           "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238b5cf6'><circle cx='12' cy='12' r='10'/><path d='M12 6v6l4 2' stroke='white' stroke-width='2' fill='none'/></svg>",
@@ -51,7 +51,7 @@
       "name": "View Analytics",
       "short_name": "Analytics",
       "description": "Check your progress",
-      "url": "/?action=analytics",
+      "url": "./?action=analytics",
       "icons": [
         {
           "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238b5cf6'><path d='M3 3v18h18'/><polyline points='6 15 10 10 14 13 18 6' stroke='white' stroke-width='2' fill='none'/></svg>",

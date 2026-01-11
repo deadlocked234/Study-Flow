@@ -1677,7 +1677,8 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        // Use a relative path so GitHub Pages project sites (e.g., /Study-Flow/) resolve correctly
+        navigator.serviceWorker.register('sw.js')
           .then(registration => {
             console.log('✅ Service Worker registered successfully:', registration.scope);
           })

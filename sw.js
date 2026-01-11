@@ -2,12 +2,12 @@ const CACHE_NAME = 'studyflow-v3';
 
 // Only cache local assets, skip CDN URLs to avoid CORS issues
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/Assets/style.css',
-  '/Assets/script.js',
-  '/manifest.json',
-  '/Assets/brain-duotone.png'
+  './',
+  './index.html',
+  './Assets/style.css',
+  './Assets/script.js',
+  './manifest.json',
+  './Assets/brain-duotone.png'
 ];
 
 // Install Service Worker

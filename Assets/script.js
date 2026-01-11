@@ -2708,7 +2708,8 @@ createApp({
 // Register service worker for PWA
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        // Register with a relative path so it works on GitHub Pages project sites
+        navigator.serviceWorker.register('sw.js')
             .then((registration) => {
                 console.log('ServiceWorker registered successfully');
             })
