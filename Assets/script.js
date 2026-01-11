@@ -408,10 +408,10 @@ createApp({
         const token = localStorage.getItem('jwt');
 
         if (!token) {
-            await wait(1500); 
+            await wait(300); 
             this.loadingText = "Setting up guest environment...";
             this.currentUser = 'guest';
-            await wait(1000); 
+            await wait(200); 
             
             this.loadTheme();
             this.loadNotificationSettings();
@@ -463,13 +463,13 @@ createApp({
             this.startNotificationFeatures();
 
             this.loadingText = "Ready!";
-            await wait(1500); 
+            await wait(200); 
 
         } catch (err) {
             console.error('Auth restore failed', err);
             clearTimeout(slowServerTimeout);
             this.loadingText = "Session expired. Redirecting...";
-            await wait(500); 
+            await wait(200); 
             localStorage.removeItem('jwt');
             this.loadTheme();
             this.loadNotificationSettings();
