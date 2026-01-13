@@ -26,15 +26,19 @@ router.get('/', protect, async (req, res) => {
 // @route   POST /api/tasks
 // @access  Private
 router.post('/', protect, async (req, res) => {
-    const { text } = req.body;
-    if (!text) {
-        return res.status(400).json({ message: 'Text is required' });
+    // Support both 'title' (new) and 'text' (legacy)
+    const title = req.body.title || req.body.text;
+    
+    if (!title) {
+        return res.status(400).json({ message: 'Title is required' });
     }
 
     try {
         const task = await Task.create({
             user: req.user.id,
-            text,
+            title: title,
+            deadline: req.body.deadline || null,
+            priority: req.body.priority || 'medium',
             completed: false
         });
 

@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 
 const taskSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
-    text: { type: String, required: true },
+    title: { type: String, required: true }, // Changed from text to title to match AI integration
+    description: String,
+    deadline: Date,
+    priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },
     completed: { type: Boolean, default: false }
 }, { timestamps: true });
 

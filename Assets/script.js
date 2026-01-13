@@ -1028,8 +1028,8 @@ createApp({
 
             // Map tasks to events
             const events = this.tasks.map(task => ({
-                title: task.title,
-                start: task.deadline || new Date(),
+                title: task.title || task.text || 'Untitled Task',
+                start: task.deadline || task.createdAt || new Date(),
                 allDay: true,
                 backgroundColor: task.completed ? '#10b981' : '#8b5cf6',
                 borderColor: task.completed ? '#10b981' : '#8b5cf6'
@@ -1890,8 +1890,12 @@ createApp({
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'right',
-                            labels: { color: '#9ca3af' }
+                            position: window.innerWidth < 640 ? 'bottom' : 'right',
+                            labels: { 
+                                color: '#9ca3af',
+                                boxWidth: 12,
+                                padding: 15
+                            }
                         },
                         title: {
                             display: true,

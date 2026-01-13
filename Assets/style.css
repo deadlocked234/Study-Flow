@@ -179,6 +179,16 @@ body.theme-light .text-gray-500 {
     background: linear-gradient(to bottom, #4338ca, #7e22ce);
 }
 
+/* Mobile Scrollbar Hide */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 4px; /* Thinner on mobile */
+    }
+    ::-webkit-scrollbar-thumb {
+        border-width: 1px;
+    }
+}
+
 /* Loader animation */
 @keyframes spin {
     to { transform: rotate(360deg); }
