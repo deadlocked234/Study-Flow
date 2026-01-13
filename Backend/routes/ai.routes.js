@@ -6,11 +6,12 @@ const Subject = require('../models/Subject');
 const Task = require('../models/Task');
 const Session = require('../models/Session');
 const Goal = require('../models/Goal');
+const Quiz = require('../models/Quiz');
 
 // যদি API Key না থাকে, তবে ডামি রেসপন্স দিবে
 const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
-// Using unlimited model as default to avoid rate limits
-const DEFAULT_MODEL = process.env.GEMINI_MODEL || 'gemini-3-flash';
+// Use user's preferred model
+const DEFAULT_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 // AI Route now protected to access user data
 router.post('/ask', protect, async (req, res) => {
@@ -54,22 +55,30 @@ router.post('/ask', protect, async (req, res) => {
             Instructions:
             1. Use the study data to give personalized advice if relevant.
             2. Be encouraging, concise, and helpful.
-            3. If the user asks to "add a subject", "start a timer", or "create a task", guide them on how to do it in the app, or confirm you understand (even though you can't execute actions directly yet, respond as a helpful assistant).
-            4. If the user asks for motivation, use their goals or tasks to inspire them.
+            3. AUTO-ACTION: If the user EXPLICITLY asks to create a task, add a subject, or set a goal, you MUST return a valid JSON object wrapped in triple pipes at the END of your response like this:
+               |||{"action": "create_task", "data": {"title": "Task Name", "deadline": "YYYY-MM-DD", "priority": "medium"}}|||
+               Supported actions: "create_task", "add_subject", "set_goal".
+               For "create_task" required: title. optional: deadline, priority.
+               For "add_subject" required: name.
+               For "set_goal" required: title, target, unit, type.
+            4. If no action is needed, just reply normally.
         `;
 
-        // Fallback chain: Use only verified working models
+        // Corrected Model Selection Logic
+        // We will try multiple models in order of preference based on user availability
         const candidates = [
-            'gemini-2.5-flash',               // Primary model (works - 4/5 RPM)
-            'gemini-3-flash',                 // Backup model
-            'gemini-2.5-flash-lite',          // Lite version
-            'gemini-1.5-flash',               // Stable fallback
-            'gemini-1.5-pro'                  // Last resort
+            'gemini-2.5-flash',      // User verified model
+            'gemini-2.5-flash-lite', // User verified model (higher RPM potential)
+            'gemini-1.5-flash',      // Fallback
+            'gemini-pro'             // Legacy support
         ];
+        
         let text = null;
         let lastErr = null;
         let usedModel = null;
-        for (const m of candidates.filter(Boolean)) {
+        
+        // Loop through models until one works
+        for (const m of candidates) {
             try {
                 const activeModel = genAI.getGenerativeModel({ model: m });
                 const result = await activeModel.generateContent(fullPrompt);
@@ -77,35 +86,148 @@ router.post('/ask', protect, async (req, res) => {
                 text = response.text();
                 usedModel = m;
                 console.log(`✅ AI Success with model: ${m}`);
-                break;
+                break; // Stop loop if successful
             } catch (err) {
-                console.log(`❌ AI Failed with ${m}:`, err.message);
+                console.log(`⚠️ AI Failed with ${m}:`, err.message);
                 lastErr = err;
-                continue;
+                // Continue to next model
             }
         }
 
         if (!text) {
-            console.error('AI Fallback Error:', lastErr);
-            return res.status(500).json({ message: 'No supported Gemini model responded. Check your API key and available models.' });
+             console.error('AI Fatal Error: All models failed.', lastErr);
+             throw new Error('All AI models are currently unavailable. Please try again later.');
+        }
+
+        // Check for Auto-Action
+        const actionMatch = text.match(/\|\|\|(.*?)\|\|\|/s);
+        let actionResult = null;
+
+        if (actionMatch) {
+            try {
+                const actionJson = JSON.parse(actionMatch[1]);
+                console.log("🤖 AI Action Triggered:", actionJson);
+
+                if (actionJson.action === 'create_task') {
+                    const newTask = await Task.create({
+                        user: userId,
+                        title: actionJson.data.title,
+                        deadline: actionJson.data.deadline || new Date(),
+                        priority: actionJson.data.priority || 'medium'
+                    });
+                    actionResult = `Created task: "${newTask.title}"`;
+                } 
+                else if (actionJson.action === 'add_subject') {
+                    const newSubject = await Subject.create({
+                        user: userId,
+                        name: actionJson.data.name
+                    });
+                    actionResult = `Added subject: "${newSubject.name}"`;
+                }
+                
+                // Remove the JSON from the user-facing text
+                text = text.replace(actionMatch[0], '').trim();
+                text += `\n\n✅ ${actionResult}`;
+
+            } catch (err) {
+                console.error("AI Action Failed:", err);
+                text += "\n\n(Note: I tried to perform an action but something went wrong.)";
+            }
         }
         
         // Send response with model info
         res.json({ 
             answer: text,
             model: usedModel,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            actionPerformed: actionResult
         });
     } catch (error) {
         console.error('AI Error:', error);
         const message = error?.message?.includes('model')
-            ? 'Unsupported Gemini model. Set GEMINI_MODEL to gemini-1.5-flash or gemini-1.5-pro.'
+            ? 'Unsupported Gemini model. Check GEMINI_MODEL env var.'
             : error?.message?.includes('API key')
             ? 'Invalid API key. Check GEMINI_API_KEY.'
-            : 'AI failed to respond';
+            : 'AI processing failed';
         res.status(500).json({ message });
     }
 });
+
+// Generate Quiz Route
+router.post('/quiz', protect, async (req, res) => {
+    try {
+        if (!genAI) {
+            return res.json({ questions: [] });
+        }
+        
+        const { topic } = req.body;
+        
+        const candidates = [
+            'gemini-2.5-flash',
+            'gemini-2.5-flash-lite',
+            'gemini-1.5-flash'
+        ];
+
+        let text = null;
+        let usedModel = null;
+
+        for (const m of candidates) {
+            try {
+                const model = genAI.getGenerativeModel({ model: m });
+                const prompt = `
+                    Generate a 5-question multiple choice quiz about "${topic}".
+                    Return strictly a JSON array without any markdown formatting.
+                    Structure:
+                    [
+                        {
+                            "question": "Question text?",
+                            "options": ["A", "B", "C", "D"],
+                            "correctAnswer": 0 // Index of correct option (0-3)
+                        }
+                    ]
+                `;
+
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                text = response.text();
+                usedModel = m;
+                console.log(`✅ Quiz generated with: ${m}`);
+                break;
+            } catch (err) {
+                 console.log(`⚠️ Quiz Gen failed with ${m}:`, err.message);
+            }
+        }
+
+        if (!text) throw new Error('Failed to generate quiz with all available models');
+        
+        // Clean markdown if present
+        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        
+        const questions = JSON.parse(text);
+
+        // Save to Database
+        if (req.user && req.user.id) {
+            await Quiz.create({
+                user: req.user.id,
+                topic: topic,
+                questions: questions
+            });
+            console.log("💾 Quiz saved to database");
+        }
+        
+        res.json({ questions });
+    } catch (error) {
+        console.error('Quiz Gen Error:', error);
+        const message = error?.message?.includes('model')
+            ? 'Unsupported Gemini model. Check GEMINI_MODEL env var.'
+            : error?.message?.includes('API key')
+            ? 'Invalid API key. Check GEMINI_API_KEY.'
+            : 'Quiz generation failed';
+        res.status(500).json({ message });
+    }
+});
+
+
 
 // Health check to verify AI readiness
 router.get('/health', (req, res) => {

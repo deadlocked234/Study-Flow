@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Session = require('../models/Session');
+const Task = require('../models/Task');
+const Subject = require('../models/Subject');
+const Goal = require('../models/Goal');
+const Quiz = require('../models/Quiz'); // Import Quiz model if recently created
 const { admin } = require('../middleware/admin.middleware');
 
 // Get all users
@@ -67,7 +71,7 @@ router.get('/analytics', admin, async (req, res) => {
 
 const bcrypt = require('bcryptjs');
 
-// Delete user (prevent admin deletion)
+// Delete user (Super Admin - Cascade Delete)
 router.delete('/users/:id', admin, async (req, res) => {
     try {
         const userToDelete = await User.findById(req.params.id);
@@ -76,16 +80,24 @@ router.delete('/users/:id', admin, async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Check if trying to delete an admin
-        if (userToDelete.role === 'admin') {
-            return res.status(403).json({ 
-                message: 'Cannot delete admin users. Use demote-admin endpoint instead.' 
-            });
+        // Prevent deleting yourself
+        if (req.user.id === req.params.id) {
+             return res.status(400).json({ message: 'You cannot delete your own admin account.' });
         }
 
-        await User.findByIdAndDelete(req.params.id);
-        res.json({ success: true, message: 'User removed successfully' });
+        // Cascade Delete: Remove all user data
+        await Promise.all([
+            Session.deleteMany({ user: userToDelete._id }),
+            Task.deleteMany({ user: userToDelete._id }),
+            Subject.deleteMany({ user: userToDelete._id }),
+            Goal.deleteMany({ user: userToDelete._id }),
+            Quiz.deleteMany({ user: userToDelete._id }), // Remove their quizzes
+            User.findByIdAndDelete(req.params.id)
+        ]);
+
+        res.json({ success: true, message: 'User and all associated data deleted permanently.' });
     } catch (error) {
+        console.error("Delete Error:", error);
         res.status(500).json({ message: 'Server Error' });
     }
 });

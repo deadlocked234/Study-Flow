@@ -119,8 +119,45 @@ io.on('connection', (socket) => {
     socket.on('task-updated', handleTaskUpdated);
     socket.on('task-deleted', handleTaskDeleted);
 
+    // 🔴 Study Rooms Logic
+    socket.on('join-room', (roomName) => {
+        // Leave previous rooms (except default user room)
+        Array.from(socket.rooms).forEach(r => {
+            if (r !== `user_${socket.userId}` && r !== socket.id) {
+                socket.leave(r);
+            }
+        });
+
+        if (roomName) {
+            socket.join(roomName);
+            // Emitting updated count to all clients
+            updateRoomCounts();
+        }
+    });
+
+    socket.on('leave-room', (roomName) => {
+        if (roomName) {
+            socket.leave(roomName);
+            updateRoomCounts();
+        }
+    });
+
+    // Helper to get room counts
+    const updateRoomCounts = () => {
+        const rooms = ['Math Club', 'Lofi Lounge', 'Silent Study', 'Coffee Shop', 'Library']; // Predefined rooms
+        const counts = {};
+        
+        rooms.forEach(room => {
+            const roomSet = io.sockets.adapter.rooms.get(room);
+            counts[room] = roomSet ? roomSet.size : 0;
+        });
+        
+        io.emit('update-room-counts', counts);
+    };
+
     // Clean up listeners on disconnect to prevent memory leaks
     socket.on('disconnect', () => {
+        updateRoomCounts(); // Update counts on disconnect
         socket.removeListener('start-timer', handleStartTimer);
         socket.removeListener('pause-timer', handlePauseTimer);
         socket.removeListener('reset-timer', handleResetTimer);
