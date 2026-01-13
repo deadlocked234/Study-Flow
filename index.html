@@ -1011,7 +1011,7 @@
          <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Boost Your Productivity?</h2>
          <p class="text-lg opacity-80 mb-8">Join thousands of students and professionals who trust StudyFlow for their focus needs.</p><button @click="currentView = 'timer'" class="btn-primary px-10 py-4 rounded-xl font-semibold text-lg flex items-center gap-2 mx-auto"> <i class="ph-bold ph-rocket-launch text-xl"></i> Get Started Now </button>
         </div>
-       </div><div v-if="currentView === 'timer'" class="max-w-4xl mx-auto animate-fadeIn px-4 sm:px-0">
+       </div><div v-if="currentView === 'timer'" class="max-w-4xl mx-auto animate-fadeIn">
   <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center md:text-left">Focus Timer</h2>
   
   <div class="glass rounded-2xl p-4 sm:p-6 mb-6 text-center">
@@ -1036,8 +1036,8 @@
     </div>
    </div>
 
-   <div class="flex justify-center items-center mb-6 relative w-full h-[280px] sm:h-[320px]">
-    <div class="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] flex items-center justify-center">
+   <div class="flex justify-center items-center mb-6 relative w-full h-[240px] sm:h-[320px]">
+    <div class="relative w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] flex items-center justify-center">
      <svg viewBox="0 0 280 280" class="w-full h-full transform -rotate-90" preserveAspectRatio="xMidYMid meet">
       <circle cx="140" cy="140" r="120" stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="none" /> 
       <circle cx="140" cy="140" r="120" :stroke="timerColor" stroke-width="12" fill="none" :stroke-dasharray="753.98" :stroke-dashoffset="timerProgress" class="progress-ring-circle" :class="{ 'pulse-warning': timeRemaining <= 60 && timerRunning }" />
@@ -1187,8 +1187,8 @@
           </div><button @click="clearCompletedTasks" class="text-sm text-purple-400 hover:text-purple-300"> Clear Completed </button>
          </div>
         </div>
-       </div><div v-if="currentView === 'analytics'" class="max-w-6xl mx-auto animate-fadeIn px-4 sm:px-0">
-        <h2 class="text-3xl font-bold mb-6">Analytics &amp; Profile</h2><div class="glass rounded-2xl p-4 sm:p-6 mb-6">
+       </div><div v-if="currentView === 'analytics'" class="max-w-6xl mx-auto animate-fadeIn">
+        <h2 class="text-3xl font-bold mb-6">Analytics &amp; Profile</h2><div class="glass rounded-2xl p-3 sm:p-6 mb-6">
          <div class="flex flex-wrap gap-2 sm:gap-3"><button @click="analyticsView = 'daily'" :class="analyticsView === 'daily' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-3 sm:px-6 py-2 rounded-xl font-medium text-sm sm:text-base flex-1 sm:flex-initial flex items-center justify-center gap-2"> <i class="ph-bold ph-calendar"></i> Daily </button> <button @click="analyticsView = 'weekly'" :class="analyticsView === 'weekly' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-3 sm:px-6 py-2 rounded-xl font-medium text-sm sm:text-base flex-1 sm:flex-initial flex items-center justify-center gap-2"> <i class="ph-bold ph-calendar-blank"></i> Weekly </button> <button @click="analyticsView = 'monthly'" :class="analyticsView === 'monthly' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-3 sm:px-6 py-2 rounded-xl font-medium text-sm sm:text-base flex-1 sm:flex-initial flex items-center justify-center gap-2"> <i class="ph-bold ph-calendar-dots"></i> Monthly </button>
          </div>
         </div><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
@@ -1234,25 +1234,25 @@
            </div>
           </div>
          </div>
-        </div><div class="grid md:grid-cols-2 gap-6 mb-6"><div class="glass rounded-2xl p-4 sm:p-6">
+        </div><div class="grid md:grid-cols-2 gap-4 sm:gap-6 mb-6"><div class="glass rounded-2xl p-3 sm:p-6">
            <h3 class="text-xl font-semibold mb-4">Study Time Trend</h3>
            <div class="chart-container relative h-64 sm:h-80 w-full">
             <canvas ref="studyTimeChart"></canvas>
            </div>
-          </div><div class="glass rounded-2xl p-4 sm:p-6">
+          </div><div class="glass rounded-2xl p-3 sm:p-6">
            <h3 class="text-xl font-semibold mb-4">Subject Distribution</h3>
            <div class="chart-container relative h-64 sm:h-80 w-full">
             <canvas ref="subjectChart"></canvas>
            </div>
           </div>
-         </div><div class="glass rounded-2xl p-6 mb-6">
+         </div><div class="glass rounded-2xl p-3 sm:p-6 mb-6">
           <h3 class="text-xl font-semibold mb-4">Subject Progress</h3>
           <div v-if="Object.keys(subjectStats).length === 0" class="text-center opacity-70 py-8"><i class="ph-bold ph-books text-5xl mb-3"></i>
            <p>No study data yet. Start a focus session!</p>
           </div>
           
           <div v-else class="space-y-3">
-           <div v-for="(stats, subject) in subjectStats" :key="subject" class="glass-strong p-4 rounded-2xl border border-white/5 hover:bg-white/5 transition-all group">
+           <div v-for="(stats, subject) in subjectStats" :key="subject" class="glass-strong p-3 sm:p-4 rounded-2xl border border-white/5 hover:bg-white/5 transition-all group">
             
             <div class="flex justify-between items-center mb-3">
              <div class="flex items-center gap-3">
