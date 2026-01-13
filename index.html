@@ -1021,11 +1021,11 @@
   </div>
 
   <div class="glass rounded-2xl p-4 sm:p-6 mb-6">
-   <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6">
-    <button @click="setTimerMode('focus')" :class="timerMode === 'focus' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-3 sm:px-4 py-2 text-xs sm:text-base rounded-xl font-medium flex-1 sm:flex-initial text-center whitespace-nowrap"> Focus </button> 
-    <button @click="setTimerMode('shortBreak')" :class="timerMode === 'shortBreak' ? 'bg-green-600 text-white' : 'btn-secondary'" class="px-3 sm:px-4 py-2 text-xs sm:text-base rounded-xl font-medium flex-1 sm:flex-initial text-center whitespace-nowrap"> Short Break </button> 
-    <button @click="setTimerMode('longBreak')" :class="timerMode === 'longBreak' ? 'bg-blue-600 text-white' : 'btn-secondary'" class="px-3 sm:px-4 py-2 text-xs sm:text-base rounded-xl font-medium flex-1 sm:flex-initial text-center whitespace-nowrap"> Long Break </button> 
-    <button @click="setTimerMode('custom')" :class="timerMode === 'custom' ? 'bg-orange-600 text-white' : 'btn-secondary'" class="px-3 sm:px-4 py-2 text-xs sm:text-base rounded-xl font-medium flex-1 sm:flex-initial text-center whitespace-nowrap"> Custom </button>
+   <div class="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2 sm:gap-3 mb-6">
+    <button @click="setTimerMode('focus')" :class="timerMode === 'focus' ? 'bg-purple-600 text-white' : 'btn-secondary'" class="px-3 sm:px-4 py-2 text-xs sm:text-base rounded-xl font-medium sm:flex-initial text-center whitespace-nowrap"> Focus </button> 
+    <button @click="setTimerMode('shortBreak')" :class="timerMode === 'shortBreak' ? 'bg-green-600 text-white' : 'btn-secondary'" class="px-3 sm:px-4 py-2 text-xs sm:text-base rounded-xl font-medium sm:flex-initial text-center whitespace-nowrap"> Short Break </button> 
+    <button @click="setTimerMode('longBreak')" :class="timerMode === 'longBreak' ? 'bg-blue-600 text-white' : 'btn-secondary'" class="px-3 sm:px-4 py-2 text-xs sm:text-base rounded-xl font-medium sm:flex-initial text-center whitespace-nowrap"> Long Break </button> 
+    <button @click="setTimerMode('custom')" :class="timerMode === 'custom' ? 'bg-orange-600 text-white' : 'btn-secondary'" class="px-3 sm:px-4 py-2 text-xs sm:text-base rounded-xl font-medium sm:flex-initial text-center whitespace-nowrap"> Custom </button>
    </div>
 
    <div v-if="timerMode === 'custom'" class="mb-6 glass-strong p-4 rounded-xl">
@@ -1111,7 +1111,7 @@
 
         <div class="glass rounded-2xl p-4 sm:p-6 mb-6">
          <h3 class="text-xl font-semibold mb-4 flex items-center gap-2"><i class="ph-bold ph-book text-purple-400"></i> Manage Subjects</h3>
-         <div class="flex gap-3 mb-6"><input v-model="newSubject" type="text" class="flex-1 px-4 py-3 rounded-xl glass-strong" placeholder="Add new subject (e.g., Mathematics, Physics, History)" @keyup.enter="addSubject"> <button @click="addSubject" class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2"> <i class="ph-bold ph-plus text-lg"></i> Add </button>
+         <div class="flex flex-col sm:flex-row gap-3 mb-6"><input v-model="newSubject" type="text" class="flex-1 px-4 py-3 rounded-xl glass-strong min-w-0" placeholder="Add new subject..." @keyup.enter="addSubject"> <button @click="addSubject" class="btn-primary w-full sm:w-auto px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2"> <i class="ph-bold ph-plus text-lg"></i> Add </button>
          </div>
          <div v-if="subjects.length === 0" class="text-center opacity-70 py-8">
           <i class="ph-bold ph-book-open text-5xl mb-3 text-purple-400"></i>
@@ -1125,9 +1125,9 @@
              <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg" :class="getSubjectIconClass(index)">
               {{ (subject.name || subject).charAt(0).toUpperCase() }}
              </div>
-             <div>
-              <div class="font-semibold text-white">{{ subject.name || subject }}</div>
-              <div class="text-xs opacity-70">{{ subjectStats[subject.name || subject] || 0 }} sessions</div>
+             <div class="min-w-0">
+              <div class="font-semibold text-white truncate">{{ subject.name || subject }}</div>
+              <div class="text-xs opacity-70">{{ (subjectStats[subject.name || subject]?.sessions || 0) }} sessions</div>
              </div>
             </div>
             <button @click="deleteSubject(subject.name || subject)" class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-opacity p-1 rounded-lg hover:bg-red-500/20">
