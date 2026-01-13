@@ -23,7 +23,14 @@ router.post('/ask', protect, async (req, res) => {
         const { prompt } = req.body;
         const userId = req.user.id;
         const userName = req.user.firstName ? `${req.user.firstName} ${req.user.lastName}` : req.user.username;
-
+        const today = new Date().toLocaleString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+        });
         // Fetch user data for context
         const [subjects, tasks, sessions, goals] = await Promise.all([
             Subject.find({ user: userId }),
@@ -34,6 +41,7 @@ router.post('/ask', protect, async (req, res) => {
 
         // Construct context string
         const context = `
+            Current Date and Time: ${today}
             User Profile:
             - Name: ${userName}
             - Current Subjects: ${subjects.map(s => s.name).join(', ') || 'None'}
@@ -55,13 +63,14 @@ router.post('/ask', protect, async (req, res) => {
             Instructions:
             1. Use the study data to give personalized advice if relevant.
             2. Be encouraging, concise, and helpful.
-            3. AUTO-ACTION: If the user EXPLICITLY asks to create a task, add a subject, or set a goal, you MUST return a valid JSON object wrapped in triple pipes at the END of your response like this:
+            3. The current date provided in context is accurate. Use it to calculate days remaining for deadlines or to answer "what is today".
+            4. AUTO-ACTION: If the user EXPLICITLY asks to create a task, add a subject, or set a goal, you MUST return a valid JSON object wrapped in triple pipes at the END of your response like this:
                |||{"action": "create_task", "data": {"title": "Task Name", "deadline": "YYYY-MM-DD", "priority": "medium"}}|||
                Supported actions: "create_task", "add_subject", "set_goal".
                For "create_task" required: title. optional: deadline, priority.
                For "add_subject" required: name.
                For "set_goal" required: title, target, unit, type.
-            4. If no action is needed, just reply normally.
+            5. If no action is needed, just reply normally.
         `;
 
         // Corrected Model Selection Logic
