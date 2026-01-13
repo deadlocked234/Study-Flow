@@ -10,8 +10,8 @@ const Quiz = require('../models/Quiz');
 
 // যদি API Key না থাকে, তবে ডামি রেসপন্স দিবে
 const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
-// Use user's preferred model
-const DEFAULT_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+// Use user's preferred model (optimized for quota)
+const DEFAULT_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
 
 // AI Route now protected to access user data
 router.post('/ask', protect, async (req, res) => {
@@ -64,22 +64,33 @@ router.post('/ask', protect, async (req, res) => {
             1. Use the study data to give personalized advice if relevant.
             2. Be encouraging, concise, and helpful.
             3. The current date provided in context is accurate. Use it to calculate days remaining for deadlines or to answer "what is today".
-            4. AUTO-ACTION: If the user EXPLICITLY asks to create a task, add a subject, or set a goal, you MUST return a valid JSON object wrapped in triple pipes at the END of your response like this:
-               |||{"action": "create_task", "data": {"title": "Task Name", "deadline": "YYYY-MM-DD", "priority": "medium"}}|||
-               Supported actions: "create_task", "add_subject", "set_goal".
-               For "create_task" required: title. optional: deadline, priority.
-               For "add_subject" required: name.
-               For "set_goal" required: title, target, unit, type.
-            5. If no action is needed, just reply normally.
+            4. 🔴 CRITICAL AUTO-ACTION RULE 🔴: 
+               - If user says ANY variation of: "add [subject name]", "create task", "set goal", "add a subject", "make a task", etc.
+               - You MUST ALWAYS include the action JSON at the END of your response
+               - Format: |||{"action": "ACTION_TYPE", "data": {...}}|||
+               
+               Examples:
+               User: "Add CSE Basic as a subject" 
+               → Response: "Great! I'll add that for you. |||{"action": "add_subject", "data": {"name": "CSE Basic"}}|||"
+               
+               User: "Create task to study math tomorrow"
+               → Response: "Got it! |||{"action": "create_task", "data": {"title": "Study math", "deadline": "2026-01-14"}}|||"
+               
+               User: "Set goal to read 5 books this month"
+               → Response: "Excellent goal! |||{"action": "set_goal", "data": {"title": "Read books", "target": 5, "unit": "books", "type": "monthly"}}|||"
+               
+               Supported actions: "create_task", "add_subject", "set_goal"
+               - create_task: required: title | optional: deadline (YYYY-MM-DD), priority (low/medium/high)
+               - add_subject: required: name
+               - set_goal: required: title, target (number), unit (string), type (daily/weekly/monthly)
+            5. If user is just asking questions or chatting, reply normally WITHOUT any JSON.
         `;
 
-        // Corrected Model Selection Logic
-        // We will try multiple models in order of preference based on user availability
+        // Optimized Model Selection Based on Quota
+        // Priority: Models with remaining daily quota
         const candidates = [
-            'gemini-2.5-flash',      // User verified model
-            'gemini-2.5-flash-lite', // User verified model (higher RPM potential)
-            'gemini-1.5-flash',      // Fallback
-            'gemini-pro'             // Legacy support
+            'gemini-2.5-flash-lite', // 10 RPM, 20 RPD limit
+            'gemini-2.5-flash'       // 5 RPM, 20 RPD limit
         ];
         
         let text = null;
@@ -105,6 +116,10 @@ router.post('/ask', protect, async (req, res) => {
 
         if (!text) {
              console.error('AI Fatal Error: All models failed.', lastErr);
+             // Check if it's a quota error
+             if (lastErr?.status === 429) {
+                 throw new Error('Daily AI quota reached (20 requests per model). Quota resets at midnight UTC. Please try again later.');
+             }
              throw new Error('All AI models are currently unavailable. Please try again later.');
         }
 
@@ -118,13 +133,20 @@ router.post('/ask', protect, async (req, res) => {
                 console.log("🤖 AI Action Triggered:", actionJson);
 
                 if (actionJson.action === 'create_task') {
-                    const newTask = await Task.create({
+                    const taskData = {
                         user: userId,
                         title: actionJson.data.title,
-                        deadline: actionJson.data.deadline || new Date(),
                         priority: actionJson.data.priority || 'medium'
-                    });
+                    };
+                    
+                    // Only add deadline if it exists and is valid
+                    if (actionJson.data.deadline) {
+                        taskData.deadline = new Date(actionJson.data.deadline);
+                    }
+                    
+                    const newTask = await Task.create(taskData);
                     actionResult = `Created task: "${newTask.title}"`;
+                    console.log("✅ Task created:", newTask);
                 } 
                 else if (actionJson.action === 'add_subject') {
                     const newSubject = await Subject.create({
@@ -132,6 +154,19 @@ router.post('/ask', protect, async (req, res) => {
                         name: actionJson.data.name
                     });
                     actionResult = `Added subject: "${newSubject.name}"`;
+                    console.log("✅ Subject created:", newSubject);
+                }
+                else if (actionJson.action === 'set_goal') {
+                    const newGoal = await Goal.create({
+                        user: userId,
+                        title: actionJson.data.title,
+                        target: actionJson.data.target,
+                        unit: actionJson.data.unit,
+                        type: actionJson.data.type || 'daily',
+                        current: 0
+                    });
+                    actionResult = `Set goal: "${newGoal.title}"`;
+                    console.log("✅ Goal created:", newGoal);
                 }
                 
                 // Remove the JSON from the user-facing text
@@ -139,8 +174,10 @@ router.post('/ask', protect, async (req, res) => {
                 text += `\n\n✅ ${actionResult}`;
 
             } catch (err) {
-                console.error("AI Action Failed:", err);
+                console.error("❌ AI Action Failed:", err.message);
                 text += "\n\n(Note: I tried to perform an action but something went wrong.)";
+                // Still set actionResult to trigger refresh, but with error
+                actionResult = "Action failed: " + err.message;
             }
         }
         
@@ -149,7 +186,7 @@ router.post('/ask', protect, async (req, res) => {
             answer: text,
             model: usedModel,
             timestamp: new Date().toISOString(),
-            actionPerformed: actionResult
+            actionPerformed: actionResult || null
         });
     } catch (error) {
         console.error('AI Error:', error);
@@ -172,9 +209,8 @@ router.post('/quiz', protect, async (req, res) => {
         const { topic } = req.body;
         
         const candidates = [
-            'gemini-2.5-flash',
             'gemini-2.5-flash-lite',
-            'gemini-1.5-flash'
+            'gemini-2.5-flash'
         ];
 
         let text = null;
@@ -238,14 +274,64 @@ router.post('/quiz', protect, async (req, res) => {
 
 
 
+// AI Timer Control - Ask AI to control/stop timer and save incomplete sessions
+router.post('/timer-control', protect, async (req, res) => {
+    try {
+        const { command, elapsedMinutes, totalMinutes, subject } = req.body;
+        const userId = req.user.id;
+        
+        // Commands: "start", "stop", "save-incomplete", "remind"
+        if (command === 'save-incomplete') {
+            // Auto-save incomplete session if user stops before timer ends
+            if (elapsedMinutes > 0) {
+                const session = await Session.create({
+                    user: userId,
+                    subject: subject || 'Quick Study',
+                    duration: Math.round(elapsedMinutes),
+                    date: new Date(),
+                    completed: false, // Mark as incomplete
+                    notes: `Incomplete session: ${elapsedMinutes}/${totalMinutes} minutes completed`
+                });
+                
+                console.log(`✅ Incomplete session saved: ${elapsedMinutes} mins for ${subject}`);
+                res.json({ 
+                    success: true, 
+                    message: `Great effort! Saved ${Math.round(elapsedMinutes)} minutes of study time.`,
+                    sessionId: session._id
+                });
+            } else {
+                res.json({ success: false, message: 'No study time to save' });
+            }
+        } 
+        else if (command === 'remind') {
+            // AI sends motivational reminder
+            const reminders = [
+                "You're doing great! Keep pushing! 💪",
+                "Time flies when you're learning! 📚",
+                "Every minute counts towards your goals! 🎯",
+                "You're building amazing study habits! ✨",
+                "Stay focused, you've got this! 🔥"
+            ];
+            
+            res.json({ 
+                success: true, 
+                reminder: reminders[Math.floor(Math.random() * reminders.length)],
+                elapsedMinutes
+            });
+        }
+        
+    } catch (error) {
+        console.error('Timer Control Error:', error);
+        res.status(500).json({ message: 'Timer control failed', error: error.message });
+    }
+});
+
 // Health check to verify AI readiness
 router.get('/health', (req, res) => {
     const availableModels = [
-        { name: 'gemini-2.5-flash', rateLimit: '5 RPM ✅', recommended: true },
-        { name: 'gemini-3-flash', rateLimit: '5 RPM ⚡' },
-        { name: 'gemini-2.5-flash-lite', rateLimit: '10 RPM ⚡' },
-        { name: 'gemini-1.5-flash', rateLimit: 'Stable ✓' },
-        { name: 'gemini-1.5-pro', rateLimit: 'Stable ✓' },
+        { name: 'gemini-2.5-flash-lite', rateLimit: '10 RPM', dailyQuota: '20 RPD', status: '✅ Primary', recommended: true },
+        { name: 'gemini-2.5-flash', rateLimit: '5 RPM', dailyQuota: '20 RPD', status: '✅ Backup' },
+        { name: 'gemini-2.5-flash-tts', rateLimit: '3 RPM', dailyQuota: '10 RPD', status: '🔇 Audio Only (Not used)' },
     ];
     
     res.json({ 

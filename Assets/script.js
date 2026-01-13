@@ -334,42 +334,99 @@ createApp({
         }
 
         // --- UPDATED CURSOR LOGIC FOR NEW CSS ---
+        // Trailing cursor with particle effects - OPTIMIZED FOR SPEED
+        let lastMoveTime = 0;
+        const MOVE_THROTTLE = 4; // Faster responsiveness
+        let ringX = window.innerWidth / 2;
+        let ringY = window.innerHeight / 2;
+        
         this._mouseMoveHandler = (e) => {
-            if (this.isTouchDevice) return; // Disable cursor follow on touch
+            if (this.isTouchDevice) return;
+            
+            const now = Date.now();
+            if (now - lastMoveTime < MOVE_THROTTLE) return;
+            lastMoveTime = now;
 
             this.cursorX = e.clientX;
             this.cursorY = e.clientY;
             
-            // New logic: Use 'left' and 'top' instead of 'transform'
-            // CSS handles the centering (-50% translate)
-            if (this.$refs.cursor) {
-                this.$refs.cursor.style.left = e.clientX + 'px';
-                this.$refs.cursor.style.top = e.clientY + 'px';
-            }
+            // Dot moves immediately
             if (this.$refs.cursorDot) {
                 this.$refs.cursorDot.style.left = e.clientX + 'px';
                 this.$refs.cursorDot.style.top = e.clientY + 'px';
+            }
+            
+            // Ring follows faster now
+            requestAnimationFrame(() => {
+                const easing = 0.25; // Faster easing (was 0.15)
+                ringX += (e.clientX - ringX) * easing;
+                ringY += (e.clientY - ringY) * easing;
+                
+                if (this.$refs.cursor) {
+                    this.$refs.cursor.style.left = ringX + 'px';
+                    this.$refs.cursor.style.top = ringY + 'px';
+                }
+            });
+            
+            // Create particle trail effect randomly - MORE PARTICLES
+            if (Math.random() > 0.5 && this.$refs.particleContainer) { // 50% instead of 30%
+                const particle = document.createElement('div');
+                particle.style.position = 'fixed';
+                particle.style.left = e.clientX + 'px';
+                particle.style.top = e.clientY + 'px';
+                particle.style.width = Math.random() * 8 + 3 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.borderRadius = '50%';
+                particle.style.background = ['#8b5cf6', '#f43f5e', '#667eea', '#ec4899'][Math.floor(Math.random() * 4)];
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '9998';
+                particle.style.opacity = '0.8';
+                particle.style.boxShadow = `0 0 ${Math.random() * 12 + 6}px currentColor`;
+                
+                this.$refs.particleContainer.appendChild(particle);
+                
+                // Animate particle away FASTER
+                let pX = e.clientX, pY = e.clientY;
+                let vX = (Math.random() - 0.5) * 6; // More velocity
+                let vY = (Math.random() - 0.5) * 6 - 1.5;
+                let life = 1;
+                
+                const animate = () => {
+                    life -= 0.025; // Faster fade
+                    if (life <= 0) {
+                        particle.remove();
+                        return;
+                    }
+                    
+                    pX += vX;
+                    pY += vY;
+                    vY += 0.2; // More gravity
+                    
+                    particle.style.left = pX + 'px';
+                    particle.style.top = pY + 'px';
+                    particle.style.opacity = life * 0.8;
+                    
+                    requestAnimationFrame(animate);
+                };
+                animate();
             }
         };
 
         // --- Hover Effect Logic ---
         this._hoverChecker = (e) => {
             const target = e.target;
+            // Only trigger on actual interactive elements, not glass backgrounds
             const isHoverable = target.closest('a') || 
-                                target.closest('button') || 
-                                target.closest('.card-hover') || 
+                                target.closest('button:not([disabled])') || 
                                 target.closest('input') || 
                                 target.closest('select') ||
                                 target.closest('textarea') ||
                                 target.closest('.btn-primary') ||
                                 target.closest('.btn-secondary') ||
-                                target.closest('.glass') ||
-                                target.closest('.glass-strong') ||
                                 target.closest('[role="button"]') ||
                                 target.closest('.clickable') ||
-                                target.closest('label') ||
                                 target.closest('.nav-item') ||
-                                target.closest('.card');
+                                target.closest('.card-hover');
 
             if (isHoverable) {
                 if (this.$refs.cursor) this.$refs.cursor.classList.add('hover');
@@ -388,6 +445,10 @@ createApp({
 
         this._scrollHandler = () => {
             this.showScrollTop = window.scrollY > 300;
+            // Debug log
+            if (window.scrollY > 300 && !this.showScrollTop) {
+                console.log('🔝 Scroll button should show at scrollY:', window.scrollY);
+            }
         };
         window.addEventListener('scroll', this._scrollHandler);
 
@@ -1168,6 +1229,13 @@ createApp({
         pauseTimer() {
             this.timerRunning = false;
             clearInterval(this.timerInterval);
+            
+            // Auto-save incomplete session if user studied for at least 1 minute
+            const elapsedMinutes = (this.totalTimerDuration - this.timeRemaining) / 60;
+            if (elapsedMinutes >= 1 && this.currentSubject) {
+                this.saveIncompleteSession(elapsedMinutes);
+            }
+            
             this.emitTimerEvent('pause-timer', {});
         },
 
@@ -1175,6 +1243,27 @@ createApp({
             this.pauseTimer();
             this.setTimerMode(this.timerMode);
             this.emitTimerEvent('reset-timer', {});
+        },
+
+        async saveIncompleteSession(elapsedMinutes) {
+            try {
+                const response = await this.apiRequest('/api/ai/timer-control', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        command: 'save-incomplete',
+                        elapsedMinutes: Math.round(elapsedMinutes * 10) / 10,
+                        totalMinutes: this.totalTimerDuration / 60,
+                        subject: this.currentSubject
+                    })
+                });
+                
+                if (response && response.success) {
+                    this.showInlineMessage(`✅ ${response.message}`);
+                    console.log('🎯 Incomplete session saved:', response.sessionId);
+                }
+            } catch (error) {
+                console.error('Failed to save incomplete session:', error);
+            }
         },
 
         async completeTimer() {
