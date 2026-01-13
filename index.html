@@ -1089,7 +1089,7 @@
     </div>
   </div>
 
-  <div class="glass rounded-2xl p-6 mb-6">
+  <div class="glass rounded-2xl p-4 sm:p-6 mb-6">
    <h3 class="text-xl font-semibold mb-4 flex items-center gap-2"><i class="ph-bold ph-bell text-purple-400"></i> Alarm Settings</h3>
    <div class="space-y-4">
     <div>
@@ -1109,7 +1109,7 @@
    </div>
   </div>
 
-        <div class="glass rounded-2xl p-6 mb-6">
+        <div class="glass rounded-2xl p-4 sm:p-6 mb-6">
          <h3 class="text-xl font-semibold mb-4 flex items-center gap-2"><i class="ph-bold ph-book text-purple-400"></i> Manage Subjects</h3>
          <div class="flex gap-3 mb-6"><input v-model="newSubject" type="text" class="flex-1 px-4 py-3 rounded-xl glass-strong" placeholder="Add new subject (e.g., Mathematics, Physics, History)" @keyup.enter="addSubject"> <button @click="addSubject" class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2"> <i class="ph-bold ph-plus text-lg"></i> Add </button>
          </div>
@@ -1119,7 +1119,7 @@
           <p class="text-sm">Add subjects to organize your study sessions</p>
          </div>
          <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <div v-for="(subject, index) in subjects" :key="subject._id || subject.id || subject" class="glass-strong p-4 rounded-xl hover:scale-105 transition-all duration-200 group" :class="getSubjectCardClass(index)">
+          <div v-for="(subject, index) in subjects" :key="subject._id || subject.id || subject" class="glass-strong p-3 sm:p-4 rounded-xl hover:scale-105 transition-all duration-200 group" :class="getSubjectCardClass(index)">
            <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-3">
              <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg" :class="getSubjectIconClass(index)">
@@ -1140,13 +1140,13 @@
            </div>
           </div>
          </div>
-        </div><div class="glass rounded-2xl p-6">
+        </div><div class="glass rounded-2xl p-4 sm:p-6">
          <h3 class="text-xl font-semibold mb-4">Today's Sessions</h3>
          <div v-if="todaySessions.length === 0" class="text-center opacity-70 py-8"><i class="ph-bold ph-clock-countdown text-5xl mb-3"></i>
           <p>No sessions completed yet today</p>
          </div>
          <div v-else class="space-y-3">
-          <div v-for="(session, index) in todaySessions" :key="index" class="glass-strong p-4 rounded-xl flex items-center justify-between">
+          <div v-for="(session, index) in todaySessions" :key="index" class="glass-strong p-3 sm:p-4 rounded-xl flex items-center justify-between">
            <div>
             <div class="font-semibold">
              {{ session.subject || 'No Subject' }}
