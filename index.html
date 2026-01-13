@@ -1177,7 +1177,7 @@
          <div v-else class="space-y-3">
           <div v-for="task in tasks" :key="task.id" class="glass-strong p-4 rounded-xl flex items-center gap-4 card-hover"><button @click="toggleTask(task.id)" class="flex-shrink-0"> <i :class="task.completed ? 'ph-fill ph-check-circle text-green-400' : 'ph-bold ph-circle'" class="text-2xl"></i> </button>
            <div class="flex-1" :class="{ 'task-complete': task.completed }">
-            {{ task.text }}
+            {{ task.title || task.text }}
            </div><button @click="deleteTask(task.id)" class="text-red-400 hover:text-red-300 flex-shrink-0"> <i class="ph-bold ph-trash text-xl"></i> </button>
           </div>
          </div>

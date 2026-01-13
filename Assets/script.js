@@ -1300,7 +1300,8 @@ createApp({
             if (this.newTask.trim()) {
                 const task = {
                     id: Date.now(),
-                    text: this.newTask.trim(),
+                    title: this.newTask.trim(), // Added title
+                    text: this.newTask.trim(),  // Kept text for backward compatibility
                     completed: false,
                     createdAt: new Date().toISOString()
                 };
@@ -1311,7 +1312,7 @@ createApp({
                 try {
                     const savedTask = await this.apiRequest('/api/tasks', {
                         method: 'POST',
-                        body: JSON.stringify({ text: task.text })
+                        body: JSON.stringify({ title: task.title }) // Sending title
                     });
 
                     const index = this.tasks.findIndex(t => t.id === task.id);

@@ -15,6 +15,10 @@ taskSchema.set('toJSON', {
     versionKey: false,
     transform: function (doc, ret) {
         ret.id = ret._id;
+        // Ensure backward compatibility: map title to text
+        if (ret.title && !ret.text) {
+            ret.text = ret.title;
+        }
         delete ret._id;
     }
 });
