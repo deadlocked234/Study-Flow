@@ -45,6 +45,7 @@
     tailwind.config = { theme: { extend: {} }, corePlugins: { preflight: true } };
   </script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script><script src="https://unpkg.com/@phosphor-icons/web"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="https://www.youtube.com/iframe_api"></script>
@@ -870,6 +871,7 @@
        </div>
       </div>
       <nav class="flex-1 space-y-2"><button @click="currentView = 'home'" :class="currentView === 'home' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-house text-xl"></i> Home </button> <button @click="currentView = 'timer'" :class="currentView === 'timer' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-timer text-xl"></i> Focus Timer </button> <button @click="currentView = 'tasks'" :class="currentView === 'tasks' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-check-square text-xl"></i> Daily Tasks </button>
+      <button @click="currentView = 'calendar'" :class="currentView === 'calendar' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-calendar text-xl"></i> Schedule </button> <button @click="currentView = 'quiz'" :class="currentView === 'quiz' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-brain text-xl"></i> AI Quiz </button>
       <button @click="currentView = 'goals'" :class="currentView === 'goals' ? 'bg-purple-600 text-white' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-target text-xl"></i> Goals </button>
       <button @click="currentView = 'analytics'" :class="currentView === 'analytics' ? 'bg-purple-600' : 'hover:bg-white/10'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium relative overflow-hidden group">
          <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1s_infinite]"></span>
@@ -894,6 +896,7 @@
         </button>
        </div>
        <nav class="space-y-2 flex-1"><button @click="currentView = 'home'; mobileMenuOpen = false" :class="currentView === 'home' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-house text-xl"></i> Home </button> <button @click="currentView = 'timer'; mobileMenuOpen = false" :class="currentView === 'timer' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-timer text-xl"></i> Focus Timer </button> <button @click="currentView = 'tasks'; mobileMenuOpen = false" :class="currentView === 'tasks' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-check-square text-xl"></i> Daily Tasks </button>
+       <button @click="currentView = 'calendar'; mobileMenuOpen = false" :class="currentView === 'calendar' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-calendar text-xl"></i> Schedule </button> <button @click="currentView = 'quiz'; mobileMenuOpen = false" :class="currentView === 'quiz' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-brain text-xl"></i> AI Quiz </button>
         <button @click="currentView = 'goals'; mobileMenuOpen = false" :class="currentView === 'goals' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-target text-xl"></i> Goals </button> 
         <button @click="currentView = 'analytics'; mobileMenuOpen = false" :class="currentView === 'analytics' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-chart-bar text-xl"></i> Analytics </button>
         <button @click="currentView = 'blog'; mobileMenuOpen = false" :class="currentView === 'blog' ? 'bg-purple-600 text-white' : ''" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium"> <i class="ph-bold ph-article text-xl"></i> Blog </button>
@@ -1062,17 +1065,28 @@
 
    <div class="grid md:grid-cols-2 gap-4">
     <div>
+     <label class="block text-sm font-medium mb-2">Study Room <span class="text-purple-400 text-xs ml-2" v-if="roomCounts[currentRoom]">{{ roomCounts[currentRoom] }} Online</span></label>
+     <select v-model="currentRoom" @change="joinRoom" class="w-full px-4 py-3 rounded-xl glass-strong max-w-full">
+         <option value="">🏠 Personal Space</option>
+         <option value="Math Club">📐 Math Club</option>
+         <option value="Lofi Lounge">🎧 Lofi Lounge</option>
+         <option value="Silent Study">🤫 Silent Study</option>
+         <option value="Coffee Shop">☕ Coffee Shop</option>
+         <option value="Library">📚 Library</option>
+     </select>
+    </div>
+    <div>
      <label class="block text-sm font-medium mb-2">Subject</label> 
      <select v-model="currentSubject" class="w-full px-4 py-3 rounded-xl glass-strong max-w-full"> 
       <option value="">Select Subject</option> 
       <option v-for="subject in subjects" :key="subject._id || subject.id || subject" :value="subject.name || subject"> {{ subject.name || subject }} </option> 
      </select>
     </div>
+   </div>
     <div>
      <label class="block text-sm font-medium mb-2">Task (Optional)</label> 
      <input v-model="currentTask" type="text" class="w-full px-4 py-3 rounded-xl glass-strong max-w-full" placeholder="What are you working on?">
     </div>
-   </div>
   </div>
 
   <div class="glass rounded-2xl p-6 mb-6">
@@ -1622,6 +1636,60 @@
         </div>
        </div>
        
+       <div v-if="currentView === 'calendar'" class="max-w-6xl mx-auto animate-fadeIn">
+        <h2 class="text-3xl font-bold mb-6">Study Schedule</h2>
+        <div class="glass rounded-2xl p-6">
+            <div id="calendar" class="text-white"></div>
+        </div>
+       </div>
+
+       <div v-if="currentView === 'quiz'" class="max-w-4xl mx-auto animate-fadeIn">
+        <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+            <i class="ph-bold ph-brain text-purple-400"></i> AI Quiz Generator
+        </h2>
+        
+        <div class="glass rounded-2xl p-6 mb-8">
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2">What do you want to learn?</label>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input v-model="quizTopic" type="text" class="flex-1 px-4 py-3 rounded-xl glass-strong" placeholder="e.g., JavaScript Promises, Photosynthesis, World War II">
+                    <button @click="generateQuiz" :disabled="!quizTopic || quizLoading" class="btn-primary px-8 py-3 rounded-xl font-bold min-w-[150px] flex items-center justify-center gap-2">
+                        <span v-if="!quizLoading">Generate</span>
+                        <span v-else><i class="ph-bold ph-spinner animate-spin"></i></span>
+                    </button>
+                </div>
+            </div>
+            <p class="text-sm opacity-60"><i class="ph-bold ph-sparkle text-yellow-400"></i> Powered by Google Gemini AI</p>
+        </div>
+
+        <div v-if="quizQuestions.length > 0" class="space-y-6">
+             <div v-for="(q, index) in quizQuestions" :key="index" class="glass rounded-2xl p-6">
+                <h3 class="text-lg font-bold mb-4">{{ index + 1 }}. {{ q.question }}</h3>
+                <div class="space-y-3">
+                    <button v-for="(opt, optIndex) in q.options" :key="optIndex" 
+                       @click="checkAnswer(index, optIndex)"
+                       :class="{
+                           'bg-gray-700 hover:bg-gray-600': q.userAnswer === undefined,
+                           'bg-green-600': q.userAnswer !== undefined && optIndex === q.correctAnswer,
+                           'bg-red-600': q.userAnswer === optIndex && optIndex !== q.correctAnswer,
+                           'opacity-50': q.userAnswer !== undefined && optIndex !== q.correctAnswer && q.userAnswer !== optIndex
+                       }"
+                       class="w-full text-left p-4 rounded-xl transition-all flex justify-between items-center">
+                       <span>{{ opt }}</span>
+                       <i v-if="q.userAnswer !== undefined && optIndex === q.correctAnswer" class="ph-bold ph-check text-xl"></i>
+                       <i v-if="q.userAnswer === optIndex && optIndex !== q.correctAnswer" class="ph-bold ph-x text-xl"></i>
+                    </button>
+                </div>
+                <div v-if="q.userAnswer !== undefined" class="mt-4 text-sm">
+                    <span v-if="q.userAnswer === q.correctAnswer" class="text-green-400 font-bold">Correct! 🎉</span>
+                    <span v-else class="text-red-400 font-bold">Incorrect. The correct answer was {{ q.options[q.correctAnswer] }}.</span>
+                </div>
+             </div>
+             
+             <button @click="resetQuiz" class="w-full btn-secondary py-4 rounded-xl font-bold">Create New Quiz</button>
+        </div>
+       </div>
+
        <footer class="glass-strong border-t border-gray-700 p-6">
        <div class="max-w-6xl mx-auto"><div class="grid md:grid-cols-4 gap-8 mb-8"><div>
           <div class="flex items-center gap-2 mb-4"><i class="ph-bold ph-brain text-2xl text-purple-400"></i>

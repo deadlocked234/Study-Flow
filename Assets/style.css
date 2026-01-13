@@ -450,59 +450,52 @@ html:not(.hasTouch) select {
     cursor: none !important; /* Still hide but cursor tracks hover state */
 }
 
-/* --- Colorful Glass Cursor Design --- */
+/* --- Simple Ring & Dot Cursor --- */
 .custom-cursor {
     position: fixed;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     pointer-events: none;
-    background: transparent;
     z-index: 9999;
     transform: translate(-50%, -50%); /* Center Alignment */
 
-    /* Glass Effect */
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-
-    /* Colorful Border */
-    border: 2px solid rgba(139, 92, 246, 0.6); /* Purple Border */
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); /* Purple Glow */
+    /* Transparent inside, clear visible border */
+    background: transparent; 
+    border: 2px solid rgba(139, 92, 246, 0.8); /* Strong purple border */
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
 
     /* Animation */
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                background 0.3s ease, 
-                border-color 0.3s ease;
+    transition: width 0.2s ease, height 0.2s ease;
 }
 
-/* Inner Colorful Dot */
+/* Inner Solid Dot */
 .custom-cursor-dot {
     position: fixed;
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 10000;
     transform: translate(-50%, -50%);
 
-    /* Beautiful Gradient */
-    background: linear-gradient(45deg, #8b5cf6, #f43f5e);
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.8);
+    /* Solid color for visibility */
+    background-color: #f43f5e; /* Bright pink/red dot */
+    box-shadow: none;
 }
 
-/* Hover Effect - Glass Expands & Color Shifts */
+/* Hover Effect - Ring Expands */
 .custom-cursor.hover {
-    width: 35px;
-    height: 35px;
-    background: rgba(139, 92, 246, 0.15); /* Tinted Background */
-    border-color: rgba(244, 63, 94, 0.8); /* Pinkish Border */
-    backdrop-filter: blur(12px);
+    width: 50px;
+    height: 50px;
+    border-color: rgba(244, 63, 94, 0.8); /* Changes to pinkish on hover */
+    background: transparent; /* Keep transparent so user can see text */
 }
 
+/* Hover Effect - Dot Stays Same */
 .custom-cursor-dot.hover {
-    transform: translate(-50%, -50%) scale(0.6); /* Dot shrinks slightly */
+    /* No change or maybe slight scale */
+    transform: translate(-50%, -50%) scale(1);
 }
 
 /* Particle Container */

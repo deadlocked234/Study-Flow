@@ -288,6 +288,19 @@ createApp({
                 priority: 'medium'
             },
 
+            // AI Quiz
+            quizTopic: '',
+            quizQuestions: [],
+            quizLoading: false,
+
+            // Calendar
+            calendarInstance: null,
+
+            // Study Rooms
+            activeRooms: null,
+            currentRoom: '',
+            roomCounts: {},
+
             // AI Assistant
             aiPrompt: '',
             aiReply: '',
@@ -655,6 +668,12 @@ createApp({
                         }, 500);
                     });
                 });
+            } else if (newView === 'calendar') {
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.initCalendar();
+                    }, 200);
+                });
             }
         },
 
@@ -831,6 +850,10 @@ createApp({
                 this.loadUserData();
             });
 
+            this.socket.on('update-room-counts', (counts) => {
+                this.roomCounts = counts;
+            });
+
             this.socket.on('disconnect', () => {
                 console.log('Disconnected from server');
             });
@@ -996,6 +1019,83 @@ createApp({
             } catch (error) {
                 this.showInlineMessage('Update failed: ' + error.message);
             }
+        },
+
+        /* --- 1. Calendar Integration --- */
+        initCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            if (!calendarEl || this.calendarInstance) return;
+
+            // Map tasks to events
+            const events = this.tasks.map(task => ({
+                title: task.title,
+                start: task.deadline || new Date(),
+                allDay: true,
+                backgroundColor: task.completed ? '#10b981' : '#8b5cf6',
+                borderColor: task.completed ? '#10b981' : '#8b5cf6'
+            }));
+
+            this.calendarInstance = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek'
+                },
+                themeSystem: 'standard',
+                height: 600,
+                events: events,
+                eventClick: (info) => {
+                    alert('Task: ' + info.event.title);
+                }
+            });
+
+            this.calendarInstance.render();
+        },
+
+        /* --- 2. Real-Time Rooms --- */
+        joinRoom() {
+            if (this.socket) {
+                // Allows joining empty room (leaving rooms)
+                this.socket.emit('join-room', this.currentRoom);
+            }
+        },
+
+        /* --- 3. AI Quiz --- */
+        async generateQuiz() {
+            if (!this.quizTopic) return;
+            this.quizLoading = true;
+            this.quizQuestions = [];
+
+            try {
+                const res = await this.apiRequest('/api/ai/quiz', {
+                    method: 'POST',
+                    body: JSON.stringify({ topic: this.quizTopic })
+                });
+
+                if (res.questions && res.questions.length > 0) {
+                    this.quizQuestions = res.questions.map(q => ({
+                        ...q,
+                        userAnswer: undefined
+                    }));
+                } else {
+                    this.showInlineMessage('Could not generate quiz. Try a different topic.');
+                }
+            } catch (err) {
+                this.showInlineMessage('Quiz error: ' + err.message);
+            } finally {
+                this.quizLoading = false;
+            }
+        },
+
+        checkAnswer(qIndex, optIndex) {
+            if (this.quizQuestions[qIndex].userAnswer !== undefined) return;
+            this.quizQuestions[qIndex].userAnswer = optIndex;
+        },
+
+        resetQuiz() {
+            this.quizTopic = '';
+            this.quizQuestions = [];
         },
 
         async handleForgotPassword() {
@@ -2642,6 +2742,14 @@ createApp({
 
                 if (data && data.answer) {
                     this.aiChatHistory.push({ role: 'assistant', content: data.answer });
+                    
+                    // Check if the AI performed an action (Task/Subject add)
+                    if (data.actionPerformed) {
+                         // Refresh data immediately to show changes in UI
+                         await this.loadUserData();
+                         this.showInlineMessage(data.actionPerformed); // specific toast
+                    }
+
                 } else {
                     this.aiChatHistory.push({ role: 'assistant', content: "I'm having trouble connecting to my brain right now." });
                 }
