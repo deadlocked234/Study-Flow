@@ -25,7 +25,7 @@ node make-admin.js <username>
 **উদাহরণ:**
 ```bash
 node make-admin.js salahuddin
-node make-admin.js Sohanaa
+node make-admin.js someone
 ```
 
 ### Email দিয়ে:
@@ -36,7 +36,7 @@ node make-admin.js <email>
 **উদাহরণ:**
 ```bash
 node make-admin.js salahuddin@example.com
-node make-admin.js sohanarahaman.sr@gmail.com
+node make-admin.js example@mail.com
 ```
 
 ---
@@ -55,7 +55,7 @@ node make-admin.js sohanarahaman.sr@gmail.com
 
 3. **যে user কে admin বানাতে চান তার username/email ব্যবহার করুন:**
    ```bash
-   node make-admin.js Sohanaa
+   node make-admin.js newone
    ```
 
 ---
@@ -90,15 +90,15 @@ node make-admin.js --list
 # 📋 All Users:
 # 1. 👤 testuser (test@mail.com) - user
 # 2. 👑 salahuddin (contact@salah.com) - admin
-# 3. 👤 Sohanaa (sohanarahaman.sr@gmail.com) - user
+# 3. 👤 somone (someone@mail.com) - user
 
-# Step 3: Sohanaa কে admin বানান
-node make-admin.js Sohanaa
+# Step 3: someone কে admin বানান
+node make-admin.js someone
 
 # Output:
 # ✅ Success! User promoted to admin:
-# 👤 Username: Sohanaa
-# 📧 Email: sohanarahaman.sr@gmail.com
+# 👤 Username: someone
+# 📧 Email: someone@mail.com
 # 🔐 Role: admin
 ```
 
