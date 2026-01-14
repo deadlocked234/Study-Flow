@@ -69,3 +69,7 @@ build/
 # Temporary files
 *.tmp
 *.temp
+
+# PDF and Analysis files (local documentation)
+*.pdf
+PROJECT_ANALYSIS_AND_IMPROVEMENTS.md
